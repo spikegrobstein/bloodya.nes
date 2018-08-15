@@ -1,0 +1,12 @@
+al 000000 .palette_to_load
+al 00809E .l2_palette
+al 00807E .l1_palette
+al 008063 .load_palettes_loop
+al 00806F .forever
+al 008054 .load_palettes
+al 00804E .main
+al 000200 .oam
+al 008048 .vblankwait
+al 008072 .irq
+al 008000 .reset
+al 008073 .nmi

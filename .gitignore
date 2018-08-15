@@ -1,0 +1,5 @@
+*.o
+*.nes
+*.map.txt
+*.nl
+*.dbg
