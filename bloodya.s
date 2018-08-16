@@ -167,7 +167,7 @@ animate_drop:
 
   lda drip_velocity, x
   cmp #$10 ; if it's equal to 10, skip increasing the thing
-  beq :+
+  beq :+ ; skip incrementing
   inc drip_velocity, x ;increase drip velocity
 
 :

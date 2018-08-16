@@ -1,6 +1,6 @@
 main:
   jsr load_palettes
-  jsr place_blood_drop
+  jsr place_blood_drops
   jmp forever
 
 load_palettes:
@@ -18,7 +18,7 @@ load_palettes_loop:
   bne load_palettes_loop  ; if x = $20, we copied all 32 bytes, so we're done
   rts
 
-place_blood_drop:
+place_blood_drops:
   ; first we initialize things
   lda #$00
   sta last_drop_appeared
@@ -29,12 +29,32 @@ place_blood_drop:
   sta $4014  ; set the high byte (02) of the RAM address, start the transfer
 
   ldx #0
-:
+  ldy #0
+place_drip_loop:
   lda drip_positions, x ; start with the initial drip position
+  cpy #0 ; if y is not zero, we want to write a to the spot
+         ; we do this because we want to place these drips off-screen, initially
+  bne copy_drip_position
+
+  lda #$ef
+  sta $0200, x ; sprite should be off-screen
+  jmp incrementors
+
+copy_drip_position:
   sta $0200, x ; store it in the sprite memory
+
+incrementors:  ; increment x and y
   inx
+  iny
+
+  cpy #04
+  bne :+
+
+  ldy #0
+
+:
   cpx #$20 ; we're loading 32 ($20) bytes
-  bne :-
+  bne place_drip_loop
 
   ; now let's initialize the starting timing and velocities
   ldx #0 
