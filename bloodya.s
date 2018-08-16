@@ -88,28 +88,18 @@ vblankwait:
 
 .segment "RODATA"
 
-l1_palette:
-  .byte $0F,$31,$32,$33
-  .byte $0F,$35,$36,$37
-  .byte $0F,$39,$3A,$3B
-  .byte $0F,$3D,$3E,$0F
-  .byte $0F,$1C,$15,$14
-  .byte $0F,$02,$38,$3C
-  .byte $0F,$1C,$15,$14
-  .byte $0F,$02,$38,$3C
-
-l2_palette:
-  .byte $31,$31,$32,$33
+main_palette:
+  .byte $17,$17,$17,$17
   .byte $31,$35,$36,$37
   .byte $31,$39,$3A,$3B
-  .byte $31,$3D,$3E,$0F
-  .byte $05,$1C,$15,$14 ;; background
+  .byte $00,$00,$00,$00
+  .byte $36,$05,$06,$07 ;; background
   .byte $01,$02,$38,$3C
   .byte $01,$1C,$15,$14
   .byte $01,$02,$38,$3C
 
 .segment "ZEROPAGE"
-  palette_to_load: .res 2 ; the palette to load
+  drip_velocity: .res 10 ; each drip's velocity
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update

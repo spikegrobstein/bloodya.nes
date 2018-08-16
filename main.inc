@@ -1,6 +1,7 @@
 main:
   ; TODO: load custom palettes
   jsr load_palettes
+  jsr place_blood_drop
   jmp forever
 
 load_palettes:
@@ -11,11 +12,31 @@ load_palettes:
   sta $2006 ; write the low byte
   ldx #$00
 load_palettes_loop:
-  lda l1_palette, x  ; load palette byte
+  lda main_palette, x  ; load palette byte
   sta $2007       ; write to ppu
   inx             ; move to next byte
   cpx #$20
   bne load_palettes_loop  ; if x = $20, we copied all 32 bytes, so we're done
+  rts
+
+place_blood_drop:
+  lda #$00
+  sta $2003  ; set the low byte (00) of the RAM address
+  lda #$02
+  sta $4014  ; set the high byte (02) of the RAM address, start the transfer
+
+  lda #$80
+  sta $0200; put sprite 0 in center of screen vertically
+  sta $0203 ; put sprite 0 in center of screen horizontally
+  lda #$00
+  sta $0201; tile number = 0
+  sta $0202; color = 0, no flip
+
+  lda #%10000000 ; enable nmi, sprites from pattern table 0
+  sta $2000
+
+  lda #%00010000 ; enable sprites
+  sta $2001
   rts
 
 forever:
