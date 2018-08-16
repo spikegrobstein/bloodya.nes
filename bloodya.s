@@ -98,9 +98,24 @@ main_palette:
   .byte $01,$1C,$15,$14
   .byte $01,$02,$38,$3C
 
+drip_positions:
+  .byte $35,$00,%00100000,$70
+  .byte $42,$00,%00100000,$75
+  .byte $38,$00,%00100000,$80
+  .byte $32,$00,%00100000,$88
+
+  .byte $40,$00,%00100000,$82
+  .byte $44,$00,%00100000,$78
+  .byte $46,$00,%00100000,$89
+  .byte $30,$00,%00100000,$80
+
+drip_starting_timing:
+  .byte 00,05,12,22
+  .byte 25,33,38,44
+
 .segment "ZEROPAGE"
-  drip_velocity: .res 10 ; each drip's velocity
-  last_drop_appeared: .res 10 ; a timer for when the last drop appeared
+  drip_velocity: .res 8 ; each drip's velocity
+  last_drop_appeared: .res 8 ; a timer for when the last drop appeared
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update
@@ -156,8 +171,6 @@ drip_drops:
   bcc end   ; carry flag not set, so it's not off-screen
 
   ; it is off screen
-  ; lda #$10 ; set the default location for the drip
-  ; sta $0200 ; set the y coord
   lda #$01 
   sta drip_velocity  ; reset the drip velocity to 1
   lda #$20

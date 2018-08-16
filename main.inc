@@ -28,13 +28,24 @@ place_blood_drop:
   lda #$02
   sta $4014  ; set the high byte (02) of the RAM address, start the transfer
 
-  lda #$10
-  sta $0200; put sprite 0 in center of screen vertically
-  lda #$80
-  sta $0203 ; put sprite 0 in center of screen horizontally
-  lda #$00
-  sta $0201; tile number = 0
-  sta $0202; color = 0, no flip
+  ldx #0
+:
+  lda drip_positions, x ; start with the initial drip position
+  sta $0200, x ; store it in the sprite memory
+  inx
+  cpx #$20 ; we're loading 32 ($20) bytes
+  bne :-
+
+  ; now let's initialize the starting timing and velocities
+  ldx #0 
+:
+  lda #1
+  sta drip_velocity, x ; first set the starting velocity to 1
+  lda drip_starting_timing, x ; then initialize all of the timings
+  sta last_drop_appeared, x
+  inx
+  cpx #$08 ; only do it 8x
+  bne :-
 
   ; set velocity to 1
   lda #1
