@@ -20,7 +20,7 @@ INES_SRAM   = 0 ; 1 = battery backed SRAM at $6000-7FFF
 ;
 
 .segment "TILES"
-.incbin "bloodya.chr"
+.incbin "chr1.chr"
 
 ; vectors placed at top 6 bytes of memory area
 ;
