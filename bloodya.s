@@ -134,47 +134,69 @@ nmi:
   lda #$02
   sta $4014 ; set the high byte of ram address
 
-  ; we only want to animate the drop if last_drop_appeared is 0
-  lda last_drop_appeared
-  cmp #$00
-  beq drip_drops
+  ; we want to iterate over each drop's last_drop_appeared value
+  ; if it's zero, we want to animate that drop.
+  ; if it's non-zero, we want to decrement it til it hits zero
+  ; if it hits zero after decrementing, move it to default position and animate
+  ; when it's off-screen, we want to re-set its last_appeared value to default.
 
-  ; if the last_drop_appeared is not zero, let's decrement by one
-  dec last_drop_appeared
+  ldx #$00
+  ldy #$00
+drip_loop:
+  lda last_drop_appeared, x
+  cmp #$00 ; check if it's zero. if so, it's gonna be animated
+  beq animate_drop
 
-  lda last_drop_appeared
-  cmp #$00
-  bne end
+  dec last_drop_appeared, x ; decrement the value
 
-  ; we just reached 0 on the last dropper
-  ; so let's place the sprite back live
-  lda #$10
-  sta $0200
+  lda last_drop_appeared, x ; load it so we can check it
+  cmp #$00 ; check if it's zero
+  bne next_drop
 
-drip_drops:
-  ; let's start trying to animate the blood going down
-  lda $0200
+  ; the thing hit zero, so we need to initialize it before we start animating
+  lda drip_positions, y
+  sta $0200, y
+
+  jmp animate_drop
+
+animate_drop:
+  lda $0200, y
   clc
-  adc drip_velocity  ; add drip velocity to sprite[0].y 
-  sta $0200
+  adc drip_velocity, x
+  sta $0200, y
 
-  lda drip_velocity
+  lda drip_velocity, x
   cmp #$10 ; if it's equal to 10, skip increasing the thing
   beq :+
-  inc drip_velocity ;increase drip velocity
+  inc drip_velocity, x ;increase drip velocity
 
 :
   ; if drip is off-screen
-  lda $0200 ; read in the y coordinate
+  lda $0200, y ; read in the y coordinate
   clc
   sbc #$ef ; check if it's off screen
-  bcc end   ; carry flag not set, so it's not off-screen
+  bcc next_drop ; carry flag not set, so it's not off-screen
 
   ; it is off screen
   lda #$01 
-  sta drip_velocity  ; reset the drip velocity to 1
+  sta drip_velocity, x  ; reset the drip velocity to 1
   lda #$20
-  sta last_drop_appeared
+  sta last_drop_appeared, x
+
+  cpx #$08
+  beq end
+
+next_drop:
+  inx
+  iny
+  iny
+  iny
+  iny
+
+  cpx #$08 ; check if we're at the 8th sprite
+  beq end  ; end our thing if so.
+
+  jmp drip_loop
 
 end:
 
