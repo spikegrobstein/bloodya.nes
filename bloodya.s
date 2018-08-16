@@ -100,7 +100,7 @@ main_palette:
 
 .segment "ZEROPAGE"
   drip_velocity: .res 10 ; each drip's velocity
-  last_drop_appeared: .res 1 ; a timer for when the last drop appeared
+  last_drop_appeared: .res 10 ; a timer for when the last drop appeared
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update
