@@ -100,6 +100,7 @@ main_palette:
 
 .segment "ZEROPAGE"
   drip_velocity: .res 10 ; each drip's velocity
+  last_drop_appeared: .res 1 ; a timer for when the last drop appeared
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update
@@ -118,6 +119,24 @@ nmi:
   lda #$02
   sta $4014 ; set the high byte of ram address
 
+  ; we only want to animate the drop if last_drop_appeared is 0
+  lda last_drop_appeared
+  cmp #$00
+  beq drip_drops
+
+  ; if the last_drop_appeared is not zero, let's decrement by one
+  dec last_drop_appeared
+
+  lda last_drop_appeared
+  cmp #$00
+  bne end
+
+  ; we just reached 0 on the last dropper
+  ; so let's place the sprite back live
+  lda #$10
+  sta $0200
+
+drip_drops:
   ; let's start trying to animate the blood going down
   lda $0200
   clc
@@ -134,14 +153,17 @@ nmi:
   lda $0200 ; read in the y coordinate
   clc
   sbc #$ef ; check if it's off screen
-  bcc :+   ; carry flag not set, so it's not off-screen
+  bcc end   ; carry flag not set, so it's not off-screen
 
   ; it is off screen
-  lda #$10 ; set the default location for the drip
-  sta $0200 ; set the y coord
-  lda #$01
+  ; lda #$10 ; set the default location for the drip
+  ; sta $0200 ; set the y coord
+  lda #$01 
   sta drip_velocity  ; reset the drip velocity to 1
-:
+  lda #$20
+  sta last_drop_appeared
+
+end:
 
   rti
 

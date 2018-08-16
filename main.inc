@@ -1,5 +1,4 @@
 main:
-  ; TODO: load custom palettes
   jsr load_palettes
   jsr place_blood_drop
   jmp forever
@@ -20,6 +19,10 @@ load_palettes_loop:
   rts
 
 place_blood_drop:
+  ; first we initialize things
+  lda #$00
+  sta last_drop_appeared
+
   lda #$00
   sta $2003  ; set the low byte (00) of the RAM address
   lda #$02
