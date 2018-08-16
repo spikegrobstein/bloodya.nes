@@ -47,7 +47,7 @@ incrementors:  ; increment x and y
   inx
   iny
 
-  cpy #04
+  cpy #04 ; reset y if it hits 4 since we want to have it go 0,1,2,3,0,1,2,3
   bne :+
 
   ldy #0
