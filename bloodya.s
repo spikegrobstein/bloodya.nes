@@ -117,5 +117,31 @@ nmi:
   sta $2003 ; set low byte of ram address
   lda #$02
   sta $4014 ; set the high byte of ram address
+
+  ; let's start trying to animate the blood going down
+  lda $0200
+  clc
+  adc drip_velocity  ; add drip velocity to sprite[0].y 
+  sta $0200
+
+  lda drip_velocity
+  cmp #$10 ; if it's equal to 10, skip increasing the thing
+  beq :+
+  inc drip_velocity ;increase drip velocity
+
+:
+  ; if drip is off-screen
+  lda $0200 ; read in the y coordinate
+  clc
+  sbc #$ef ; check if it's off screen
+  bcc :+   ; carry flag not set, so it's not off-screen
+
+  ; it is off screen
+  lda #$10 ; set the default location for the drip
+  sta $0200 ; set the y coord
+  lda #$01
+  sta drip_velocity  ; reset the drip velocity to 1
+:
+
   rti
 

@@ -25,12 +25,17 @@ place_blood_drop:
   lda #$02
   sta $4014  ; set the high byte (02) of the RAM address, start the transfer
 
-  lda #$80
+  lda #$10
   sta $0200; put sprite 0 in center of screen vertically
+  lda #$80
   sta $0203 ; put sprite 0 in center of screen horizontally
   lda #$00
   sta $0201; tile number = 0
   sta $0202; color = 0, no flip
+
+  ; set velocity to 1
+  lda #1
+  sta drip_velocity
 
   lda #%10000000 ; enable nmi, sprites from pattern table 0
   sta $2000
