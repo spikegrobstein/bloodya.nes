@@ -89,7 +89,7 @@ vblankwait:
 .segment "RODATA"
 
 main_palette:
-  .byte $17,$17,$17,$17
+  .byte $17,$35,$26,$17
   .byte $31,$35,$36,$37
   .byte $31,$39,$3A,$0f
   .byte $00,$00,$00,$00
@@ -115,18 +115,52 @@ drip_starting_timing:
 
 ; 6 tiles + column of bgs_1, then flipped
 asterisk_tiles:
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_01, bg_02, bg_02, bg_01, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_03, bgs_1, bgs_1, bg_03, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_04, bg_05, bg_06, bgs_0, bg_07, bgs_1, bgs_1, bg_07, bgs_0, bg_06, bg_05, bg_04
-  .byte bg_08, bgs_1, bg_09, bg_10, bgs_0, bg_11, bg_11, bgs_0, bg_10, bg_09, bgs_1, bg_08
-  .byte bg_12, bgs_1, bgs_1, bg_13, bg_14, bg_15, bg_15, bg_14, bg_13, bgs_1, bgs_1, bg_12
-  .byte bg_16, bg_17, bgs_1, bgs_1, bg_18, bg_19, bg_19, bg_18, bgs_1, bgs_1, bg_17, bg_16
-  .byte bgs_0, bgs_0, bg_20, bg_21, bg_22, bgs_1, bgs_1, bg_22, bg_21, bg_20, bgs_0, bgs_0
+asterisk_tiles_top:
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_000, bg_001, bg_002, bg_003, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_004, bg_005, bg_006, bg_007, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_008, bg_009, bg_010, bgs_0, bg_011, bg_012, bg_013, bg_014, bgs_0, bg_015, bg_016, bg_017
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_018, bg_019, bg_020, bg_021, bg_022, bg_023, bg_024, bg_025, bg_026, bg_027, bg_028, bg_029
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_030, bg_031, bg_032, bg_033, bg_034, bg_035, bg_036, bg_037, bg_038, bg_039, bg_040, bg_041
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_042, bg_043, bg_044, bg_045, bg_046, bg_047, bg_048, bg_049, bg_050, bg_051, bg_052, bg_053
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+
+asterisk_tiles_bottom:
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bg_054, bg_055, bg_056, bg_057, bg_058, bg_059, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_060, bg_061, bg_062, bg_063, bg_064, bg_065, bg_066, bg_067, bg_068, bg_069, bg_070, bg_071
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_072, bg_073, bg_074, bg_075, bg_076, bg_077, bg_078, bg_079, bg_080, bg_081, bg_082, bg_083
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_084, bg_085, bg_086, bg_087, bg_088, bg_089, bg_090, bg_091, bg_092, bg_093, bg_094, bg_095
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_096, bg_097, bg_098, bgs_0, bg_099, bg_100, bg_101, bg_102, bgs_0, bg_103, bg_104, bg_105
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_106, bg_107, bg_108, bg_109, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_110, bg_111, bg_112, bg_113, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
 
 asterisk_attrs:
   .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
   .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
-  .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
 
 
 .segment "ZEROPAGE"
