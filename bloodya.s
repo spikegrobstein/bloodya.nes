@@ -91,31 +91,48 @@ vblankwait:
 main_palette:
   .byte $17,$17,$17,$17
   .byte $31,$35,$36,$37
-  .byte $31,$39,$3A,$3B
+  .byte $31,$39,$3A,$0f
   .byte $00,$00,$00,$00
-  .byte $36,$05,$06,$07 ;; background
+  .byte $36,$05,$39,$37 ;; background
   .byte $01,$02,$38,$3C
   .byte $01,$1C,$15,$14
   .byte $01,$02,$38,$3C
 
 drip_positions:
-  .byte $35,$00,%00100000,$70
-  .byte $42,$00,%00100000,$75
-  .byte $38,$00,%00100000,$80
-  .byte $32,$00,%00100000,$88
+  .byte $35,$00,%00000000,$70
+  .byte $42,$00,%00000000,$75
+  .byte $38,$00,%00000000,$80
+  .byte $32,$00,%00000000,$88
 
-  .byte $40,$00,%00100000,$82
-  .byte $44,$00,%00100000,$78
-  .byte $46,$00,%00100000,$89
-  .byte $30,$00,%00100000,$80
+  .byte $40,$00,%00000000,$82
+  .byte $44,$00,%00000000,$78
+  .byte $46,$00,%00000000,$89
+  .byte $30,$00,%00000000,$80
 
 drip_starting_timing:
   .byte 00,05,12,22
   .byte 25,33,38,44
 
+; 6 tiles + column of bgs_1, then flipped
+asterisk_tiles:
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_01, bg_02, bg_02, bg_01, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_03, bgs_1, bgs_1, bg_03, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte bg_04, bg_05, bg_06, bgs_0, bg_07, bgs_1, bgs_1, bg_07, bgs_0, bg_06, bg_05, bg_04
+  .byte bg_08, bgs_1, bg_09, bg_10, bgs_0, bg_11, bg_11, bgs_0, bg_10, bg_09, bgs_1, bg_08
+  .byte bg_12, bgs_1, bgs_1, bg_13, bg_14, bg_15, bg_15, bg_14, bg_13, bgs_1, bgs_1, bg_12
+  .byte bg_16, bg_17, bgs_1, bgs_1, bg_18, bg_19, bg_19, bg_18, bgs_1, bgs_1, bg_17, bg_16
+  .byte bgs_0, bgs_0, bg_20, bg_21, bg_22, bgs_1, bgs_1, bg_22, bg_21, bg_20, bgs_0, bgs_0
+
+asterisk_attrs:
+  .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+  .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+  .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+
+
 .segment "ZEROPAGE"
-  drip_velocity: .res 8 ; each drip's velocity
-  last_drop_appeared: .res 8 ; a timer for when the last drop appeared
+drip_velocity: .res 8 ; each drip's velocity
+last_drop_appeared: .res 8 ; a timer for when the last drop appeared
+temp:           .res 1 ; temporary variable
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update
@@ -200,5 +217,38 @@ next_drop:
 
 end:
 
+  lda #$00
+  sta $2005
+  sta $2005
+
   rti
 
+;
+; subroutines and stuff
+;
+
+
+; ppu_address_tile: use with rendering off, sets memory address to tile at X/Y, ready for a $2007 write
+;   Y =  0- 31 nametable $2000
+;   Y = 32- 63 nametable $2400
+;   Y = 64- 95 nametable $2800
+;   Y = 96-127 nametable $2C00
+ppu_address_tile:
+	lda $2002 ; reset latch
+	tya
+	lsr
+	lsr
+	lsr
+	ora #$20 ; high bits of Y + $20
+	sta $2006
+	tya
+	asl
+	asl
+	asl
+	asl
+	asl
+	sta temp
+	txa
+	ora temp
+	sta $2006 ; low bits of Y + X
+	rts
