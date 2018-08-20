@@ -89,7 +89,7 @@ vblankwait:
 .segment "RODATA"
 
 main_palette:
-  .byte $17,$35,$26,$17
+  .byte $17,$08,$26,$36
   .byte $31,$35,$36,$37
   .byte $31,$39,$3A,$0f
   .byte $00,$00,$00,$00
@@ -157,6 +157,11 @@ asterisk_tiles_bottom:
   .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
   .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_110, bg_111, bg_112, bg_113, bgs_0, bgs_0, bgs_0, bgs_0
   .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+
+blurb_tiles_1:
+  .byte chr_w, chr_h, chr_a, chr_t, bgs_0, chr_i, chr_s, bgs_0, chr_a, bgs_0, chr_b, chr_l, chr_o, chr_o, chr_d, chr_y
+blurb_tiles_2:
+  .byte chr_a, chr_n, chr_e, chr_s, bgs_0, chr_d, chr_o, chr_i, chr_n, chr_g, bgs_0, chr_h, chr_e, chr_r, chr_e, chr_qm
 
 asterisk_attrs:
   .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000

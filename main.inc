@@ -120,11 +120,41 @@ bg_111 = $e6
 bg_112 = $e7
 bg_113 = $e8
 
+; chars
+chr_a = $0a
+chr_b = $0b
+chr_c = $0c
+chr_d = $0d
+chr_e = $0e
+chr_f = $0f
+chr_g = $10
+chr_h = $11
+chr_i = $12
+chr_j = $13
+chr_k = $14
+chr_l = $15
+chr_m = $16
+chr_n = $17
+chr_o = $18
+chr_p = $19
+chr_q = $1a
+chr_r = $1b
+chr_s = $1c
+chr_t = $1d
+chr_u = $1e
+chr_v = $1f
+chr_w = $20
+chr_x = $21
+chr_y = $22
+chr_z = $23
+chr_qm = $24
+
 main:
   jsr load_palettes
   jsr clear_bg
   ; jsr clear_attr
   jsr draw_asterisk
+  jsr draw_blurb
   jsr place_blood_drops
 
   lda #%00011110 ; enable sprites, enable background
@@ -273,6 +303,44 @@ draw_asterisk:
   inx
   cpx #224
   bne @draw_asterisk_bottom_loop
+
+  rts
+
+draw_blurb:
+  ldy #32
+  jsr blank_fill
+  ldy #32
+  jsr blank_fill
+  ldy #32
+  jsr blank_fill
+  ldy #32
+  jsr blank_fill
+  ldy #32
+  jsr blank_fill
+  ldy #32
+  jsr blank_fill
+  ldy #8
+  jsr blank_fill
+
+  ldx #0
+@draw_blurb_loop_1:
+  lda blurb_tiles_1, x
+  sta $2007
+  inx
+  cpx #16
+  bne @draw_blurb_loop_1
+
+  ldy #16
+  jsr blank_fill
+
+  ldx #0
+@draw_blurb_loop_2:
+  lda blurb_tiles_2, x
+  sta $2007
+  inx
+  cpx #16
+  bne @draw_blurb_loop_2
+
   rts
 
 load_attr:
