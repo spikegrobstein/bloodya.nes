@@ -89,11 +89,11 @@ vblankwait:
 .segment "RODATA"
 
 main_palette:
-  .byte $17,$08,$26,$36
+  .byte $17,$08,$26,$36 ;; main palette
   .byte $31,$35,$36,$37
   .byte $31,$39,$3A,$0f
   .byte $00,$00,$00,$00
-  .byte $36,$05,$39,$37 ;; background
+  .byte $36,$05,$39,$37
   .byte $01,$02,$38,$3C
   .byte $01,$1C,$15,$14
   .byte $01,$02,$38,$3C
@@ -110,10 +110,9 @@ drip_positions:
   .byte $30,$00,%00000000,$80
 
 drip_starting_timing:
-  .byte 00,05,12,22
-  .byte 25,33,38,44
+  .byte 00,43,97,117
+  .byte 159,193,211,240
 
-; 6 tiles + column of bgs_1, then flipped
 asterisk_tiles:
 asterisk_tiles_top:
   .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0

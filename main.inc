@@ -147,12 +147,11 @@ chr_w = $20
 chr_x = $21
 chr_y = $22
 chr_z = $23
-chr_qm = $24
+chr_qm = $24 ; questionmark
 
 main:
   jsr load_palettes
   jsr clear_bg
-  ; jsr clear_attr
   jsr draw_asterisk
   jsr draw_blurb
   jsr place_blood_drops
@@ -172,12 +171,12 @@ load_palettes:
   lda #$00
   sta $2006 ; write the low byte
   ldx #$00
-load_palettes_loop:
+@load_palettes_loop:
   lda main_palette, x  ; load palette byte
   sta $2007       ; write to ppu
   inx             ; move to next byte
   cpx #$20
-  bne load_palettes_loop  ; if x = $20, we copied all 32 bytes, so we're done
+  bne @load_palettes_loop  ; if x = $20, we copied all 32 bytes, so we're done
   rts
 
 place_blood_drops:
@@ -254,14 +253,6 @@ clear_bg:
     bne :-
   dey
   bne @clear_bg_loop
-
-clear_attr:
-  ldx #64
-  lda #%00000000
-@clear_attr_loop:
-  sta $2007 
-  dex
-  bne @clear_attr_loop
 
   rts
 
