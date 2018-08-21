@@ -90,23 +90,24 @@ vblankwait:
 
 main_palette:
   .byte $17,$08,$26,$36 ;; main palette
-  .byte $31,$35,$36,$37
+  .byte $17,$08,$18,$28
   .byte $31,$39,$3A,$0f
   .byte $00,$00,$00,$00
-  .byte $36,$05,$39,$37
+
+  .byte $36,$05,$26,$37
   .byte $01,$02,$38,$3C
   .byte $01,$1C,$15,$14
   .byte $01,$02,$38,$3C
 
 drip_positions:
   .byte $35,$00,%00000000,$70
-  .byte $42,$00,%00000000,$75
-  .byte $38,$00,%00000000,$80
-  .byte $32,$00,%00000000,$88
+  .byte $42,$01,%00000000,$75
+  .byte $38,$02,%00000000,$80
+  .byte $32,$01,%00000000,$88
 
-  .byte $40,$00,%00000000,$82
+  .byte $40,$02,%00000000,$82
   .byte $44,$00,%00000000,$78
-  .byte $46,$00,%00000000,$89
+  .byte $46,$01,%00000000,$89
   .byte $30,$00,%00000000,$80
 
 drip_starting_timing:
@@ -211,6 +212,8 @@ drip_loop:
   ; the thing hit zero, so we need to initialize it before we start animating
   lda drip_positions, y
   sta $0200, y
+  lda #0
+  sta $0201, y
 
   jmp animate_drop
 
@@ -230,7 +233,7 @@ animate_drop:
   lda $0200, y ; read in the y coordinate
   clc
   sbc #$ef ; check if it's off screen
-  bcc next_drop ; carry flag not set, so it's not off-screen
+  bcc update_drop_colors; carry flag not set, so it's not off-screen
 
   ; it is off screen
   lda #$01 
@@ -238,7 +241,34 @@ animate_drop:
   lda #$20
   sta last_drop_appeared, x
 
-  cpx #$08
+update_drop_colors:
+  ; update the drop colors basd on their y coordinate
+  ; this is to simulate the fading as they fall
+  lda $0200, y
+  clc
+  sbc #150
+  bcc :+
+
+  lda $0201, y
+  sta temp
+  inc temp
+  lda temp
+  sta $0201, y
+
+:
+  lda $0200, y
+  clc
+  sbc #170
+  bcc :+
+
+  lda $0201, y
+  sta temp
+  inc temp
+  lda temp
+  sta $0201, y
+
+:
+  cpx #$08 ; we did all 8
   beq end
 
 next_drop:
