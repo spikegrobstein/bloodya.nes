@@ -89,12 +89,12 @@ vblankwait:
 .segment "RODATA"
 
 main_palette:
-  .byte $17,$08,$26,$36 ;; main palette
+  .byte $17,$08,$26,$25 ;; main palette
   .byte $17,$08,$18,$28
   .byte $31,$39,$3A,$0f
   .byte $00,$00,$00,$00
 
-  .byte $36,$05,$26,$37
+  .byte $36,$07,$26,$37
   .byte $01,$02,$38,$3C
   .byte $01,$1C,$15,$14
   .byte $01,$02,$38,$3C
