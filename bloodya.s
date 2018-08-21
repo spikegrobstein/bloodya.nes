@@ -261,32 +261,3 @@ end:
 
   rti
 
-;
-; subroutines and stuff
-;
-
-
-; ppu_address_tile: use with rendering off, sets memory address to tile at X/Y, ready for a $2007 write
-;   Y =  0- 31 nametable $2000
-;   Y = 32- 63 nametable $2400
-;   Y = 64- 95 nametable $2800
-;   Y = 96-127 nametable $2C00
-ppu_address_tile:
-	lda $2002 ; reset latch
-	tya
-	lsr
-	lsr
-	lsr
-	ora #$20 ; high bits of Y + $20
-	sta $2006
-	tya
-	asl
-	asl
-	asl
-	asl
-	asl
-	sta temp
-	txa
-	ora temp
-	sta $2006 ; low bits of Y + X
-	rts
