@@ -116,52 +116,52 @@ drip_starting_timing:
 
 asterisk_tiles:
 asterisk_tiles_top:
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_000, bg_001, bg_002, bg_003, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_004, bg_005, bg_006, bg_007, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_008, bg_009, bg_010, bgs_0, bg_011, bg_012, bg_013, bg_014, bgs_0, bg_015, bg_016, bg_017
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_018, bg_019, bg_020, bg_021, bg_022, bg_023, bg_024, bg_025, bg_026, bg_027, bg_028, bg_029
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_030, bg_031, bg_032, bg_033, bg_034, bg_035, bg_036, bg_037, bg_038, bg_039, bg_040, bg_041
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_042, bg_043, bg_044, bg_045, bg_046, bg_047, bg_048, bg_049, bg_050, bg_051, bg_052, bg_053
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_0, big_anus_1, big_anus_2, big_anus_3, big_anus_4, big_anus_5, big_anus_6, big_anus_7, big_anus_8, big_anus_9, big_anus_10, big_anus_11
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_12, big_anus_13, big_anus_14, big_anus_15, big_anus_16, big_anus_17, big_anus_18, big_anus_19, big_anus_20, big_anus_21, big_anus_22, big_anus_23
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_24, big_anus_25, big_anus_26, big_anus_27, big_anus_28, big_anus_29, big_anus_30, big_anus_31, big_anus_32, big_anus_33, big_anus_34, big_anus_35
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_36, big_anus_37, big_anus_38, big_anus_39, big_anus_40, big_anus_41, big_anus_42, big_anus_43, big_anus_44, big_anus_45, big_anus_46, big_anus_47
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_48, big_anus_49, big_anus_50, big_anus_51, big_anus_52, big_anus_53, big_anus_54, big_anus_55, big_anus_56, big_anus_57, big_anus_58, big_anus_59
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_60, big_anus_61, big_anus_62, big_anus_63, big_anus_64, big_anus_65, big_anus_66, big_anus_67, big_anus_68, big_anus_69, big_anus_70, big_anus_71
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
 
 asterisk_tiles_bottom:
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bg_054, bg_055, bg_056, bg_057, bg_058, bg_059, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_060, bg_061, bg_062, bg_063, bg_064, bg_065, bg_066, bg_067, bg_068, bg_069, bg_070, bg_071
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_072, bg_073, bg_074, bg_075, bg_076, bg_077, bg_078, bg_079, bg_080, bg_081, bg_082, bg_083
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_084, bg_085, bg_086, bg_087, bg_088, bg_089, bg_090, bg_091, bg_092, bg_093, bg_094, bg_095
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bg_096, bg_097, bg_098, bgs_0, bg_099, bg_100, bg_101, bg_102, bgs_0, bg_103, bg_104, bg_105
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_106, bg_107, bg_108, bg_109, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bg_110, bg_111, bg_112, bg_113, bgs_0, bgs_0, bgs_0, bgs_0
-  .byte bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0, bgs_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_72, big_anus_73, big_anus_74, big_anus_75, big_anus_76, big_anus_77, big_anus_78, big_anus_79, big_anus_80, big_anus_81, big_anus_82, big_anus_83
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_84, big_anus_85, big_anus_86, big_anus_87, big_anus_88, big_anus_89, big_anus_90, big_anus_91, big_anus_92, big_anus_93, big_anus_94, big_anus_95
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_96, big_anus_97, big_anus_98, big_anus_99, big_anus_100, big_anus_101, big_anus_102, big_anus_103, big_anus_104, big_anus_105, big_anus_106, big_anus_107
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_108, big_anus_109, big_anus_110, big_anus_111, big_anus_112, big_anus_113, big_anus_114, big_anus_115, big_anus_116, big_anus_117, big_anus_118, big_anus_119
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_120, big_anus_121, big_anus_122, big_anus_123, big_anus_124, big_anus_125, big_anus_126, big_anus_127, big_anus_128, big_anus_129, big_anus_130, big_anus_131
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_132, big_anus_133, big_anus_134, big_anus_135, big_anus_136, big_anus_137, big_anus_138, big_anus_139, big_anus_140, big_anus_141, big_anus_142, big_anus_143
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
+  .byte big_anus_144, big_anus_145, big_anus_146, big_anus_147, big_anus_148, big_anus_149, big_anus_150, big_anus_151, big_anus_152, big_anus_153, big_anus_154, big_anus_155
+  .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
 
 blurb_tiles_1:
-  .byte chr_w, chr_h, chr_a, chr_t, bgs_0, chr_i, chr_s, bgs_0, chr_a, bgs_0, chr_b, chr_l, chr_o, chr_o, chr_d, chr_y
+  .byte chr_w, chr_h, chr_a, chr_t, solids_0, chr_i, chr_s, solids_0, chr_a, solids_0, chr_b, chr_l, chr_o, chr_o, chr_d, chr_y
 blurb_tiles_2:
-  .byte chr_a, chr_n, chr_e, chr_s, bgs_0, chr_d, chr_o, chr_i, chr_n, chr_g, bgs_0, chr_h, chr_e, chr_r, chr_e, chr_qm
+  .byte chr_a, chr_n, chr_e, chr_s, solids_0, chr_d, chr_o, chr_i, chr_n, chr_g, solids_0, chr_h, chr_e, chr_r, chr_e, chr_qm
 
 asterisk_attrs:
   .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
