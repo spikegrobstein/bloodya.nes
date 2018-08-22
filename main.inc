@@ -32,7 +32,7 @@ chr_qm = $24 ; questionmark
 main:
   jsr load_palettes
   jsr clear_bg
-  jsr draw_asterisk
+  jsr draw_big_anus
   jsr draw_blurb
   jsr place_blood_drops
 
@@ -145,7 +145,7 @@ blank_fill:
   bne :-
   rts
 
-draw_asterisk:
+draw_big_anus:
   lda $2002             ; read PPU status to reset the high/low latch
   lda #$20
   sta $2006             ; write the high byte of $2000 address
@@ -160,20 +160,52 @@ draw_asterisk:
   jsr blank_fill
 
   ldx #0              ; start out at 0
-@draw_asterisk_top_loop:
+@draw_big_anus_top_loop:
   lda big_anus_top, x
   sta $2007 ; write to PPU
   inx
   cpx #192
-  bne @draw_asterisk_top_loop
+  bne @draw_big_anus_top_loop
 
   ldx #0              ; start out at 0
-@draw_asterisk_bottom_loop:
+@draw_big_anus_bottom_loop:
   lda big_anus_bottom, x
   sta $2007 ; write to PPU
   inx
   cpx #224
-  bne @draw_asterisk_bottom_loop
+  bne @draw_big_anus_bottom_loop
+
+  rts
+
+draw_sm_anus:
+  lda $2002             ; read PPU status to reset the high/low latch
+  lda #$20
+  sta $2006             ; write the high byte of $2000 address
+  lda #$00
+  sta $2006             ; write the low byte of $2000 address
+
+  ldy #32
+  jsr blank_fill
+  ldy #32
+  jsr blank_fill
+  ldy #32
+  jsr blank_fill
+
+  ldx #0              ; start out at 0
+@draw_sm_anus_top_loop:
+  lda sm_anus_top, x
+  sta $2007 ; write to PPU
+  inx
+  cpx #192
+  bne @draw_sm_anus_top_loop
+
+  ldx #0              ; start out at 0
+@draw_sm_anus_bottom_loop:
+  lda sm_anus_bottom, x
+  sta $2007 ; write to PPU
+  inx
+  cpx #224
+  bne @draw_sm_anus_bottom_loop
 
   rts
 
@@ -231,13 +263,13 @@ load_attr:
 
   ldx #$00              ; start out at 0
 load_attr_loop:
-  lda asterisk_attrs ,x
+  lda anus_attrs ,x
   sta $2007
   inx
   cpx #10
   bne load_attr_loop
 
-  rts ; return from draw_asterisk subroutine
+  rts ; return from draw_anus subroutine
 
 
 forever:
