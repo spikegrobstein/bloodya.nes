@@ -161,7 +161,7 @@ draw_asterisk:
 
   ldx #0              ; start out at 0
 @draw_asterisk_top_loop:
-  lda asterisk_tiles_top, x
+  lda big_anus_top, x
   sta $2007 ; write to PPU
   inx
   cpx #192
@@ -169,7 +169,7 @@ draw_asterisk:
 
   ldx #0              ; start out at 0
 @draw_asterisk_bottom_loop:
-  lda asterisk_tiles_bottom, x
+  lda big_anus_bottom, x
   sta $2007 ; write to PPU
   inx
   cpx #224

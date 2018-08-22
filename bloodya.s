@@ -114,8 +114,8 @@ drip_starting_timing:
   .byte 00,43,97,117
   .byte 159,193,211,240
 
-asterisk_tiles:
-asterisk_tiles_top:
+big_anus:
+big_anus_top:
   .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
   .byte big_anus_0, big_anus_1, big_anus_2, big_anus_3, big_anus_4, big_anus_5, big_anus_6, big_anus_7, big_anus_8, big_anus_9, big_anus_10, big_anus_11
   .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
@@ -135,7 +135,7 @@ asterisk_tiles_top:
   .byte big_anus_60, big_anus_61, big_anus_62, big_anus_63, big_anus_64, big_anus_65, big_anus_66, big_anus_67, big_anus_68, big_anus_69, big_anus_70, big_anus_71
   .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
 
-asterisk_tiles_bottom:
+big_anus_bottom:
   .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
   .byte big_anus_72, big_anus_73, big_anus_74, big_anus_75, big_anus_76, big_anus_77, big_anus_78, big_anus_79, big_anus_80, big_anus_81, big_anus_82, big_anus_83
   .byte solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0, solids_0
