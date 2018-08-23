@@ -322,6 +322,10 @@ drip_loop:
   cmp #$00 ; check if it's zero. if so, it's gonna be animated
   beq @animate_drop
 
+  ; we only want to respawn drops if we're not clenched
+  lda clenched
+  bne @next_drop
+
   dec last_drop_appeared, x ; decrement the value
 
   lda last_drop_appeared, x ; load it so we can check it
