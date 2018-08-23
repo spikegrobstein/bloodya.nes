@@ -36,13 +36,26 @@ main:
   jsr draw_blurb
   jsr place_blood_drops
 
+  jsr enable_rendering
+
+  jmp forever
+
+disable_rendering:
+  lda #0
+  sta $2000
+  sta $2001
+  rts
+
+enable_rendering:
+
   lda #%00011110 ; enable sprites, enable background
   sta $2001
 
   lda #%10010000 ;enable NMI, sprites from Pattern 0, background from Pattern 1
   sta $2000
 
-  jmp forever
+  rts
+
 
 load_palettes:
   lda $2002 ; read PPU status to reset the latch
@@ -105,7 +118,7 @@ place_blood_drops:
   lda drip_starting_timing, x ; then initialize all of the timings
   sta last_drop_appeared, x
   inx
-  cpx #$08 ; only do it 8x
+  cpx #DRIP_COUNT ; only do it 8x
   bne @create_drip_loop
 
   ; set velocity to 1
@@ -124,9 +137,9 @@ clear_bg:
   sta $2006             ; write the low byte of $2000 address
 
   lda #solids_0
-  ldy #30
+  ldy #HEIGHT_TILES
 @clear_bg_loop:
-  ldx #32
+  ldx #WIDTH_TILES
   :
     sta $2007
     dex
@@ -138,8 +151,8 @@ clear_bg:
 
 ; fill number of blocks as stored in X
 blank_fill:
-  lda #solids_0
-  :
+    lda #solids_0
+    :
   sta $2007
   dey
   bne :-
@@ -152,11 +165,11 @@ draw_big_anus:
   lda #$00
   sta $2006             ; write the low byte of $2000 address
 
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
 
   ldx #0              ; start out at 0
@@ -184,11 +197,11 @@ draw_sm_anus:
   lda #$00
   sta $2006             ; write the low byte of $2000 address
 
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
 
   ldx #0              ; start out at 0
@@ -210,17 +223,17 @@ draw_sm_anus:
   rts
 
 draw_blurb:
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #32
+  ldy #WIDTH_TILES
   jsr blank_fill
   ldy #8
   jsr blank_fill

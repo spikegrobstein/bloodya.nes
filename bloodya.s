@@ -8,6 +8,18 @@ INES_MAPPER = 0 ; 0 = NROM
 INES_MIRROR = 1 ; 0 = horizontal mirroring, 1 = vertical mirroring
 INES_SRAM   = 0 ; 1 = battery backed SRAM at $6000-7FFF
 
+; constants
+OFFSCREEN     = $ef ; offscreen Y coordinate
+MAX_VELOCITY  = 10  ; max velocity for a drip
+DRIP_CHANGE_1 = 90  ; first breakpoint for color change
+DRIP_CHANGE_2 = 120 ; second breakpoint for color change
+DRIP_END      = 150 ; the Y of the end of the fall
+DRIP_COUNT    = 8   ; number of drips we have
+
+; convenience constants
+WIDTH_TILES = 32
+HEIGHT_TILES = 30
+
 .byte 'N', 'E', 'S', $1A ; ID
 .byte $02 ; 16k PRG bank count
 .byte $01 ; 8k CHR bank count
@@ -94,7 +106,7 @@ main_palette:
   .byte $31,$39,$3A,$0f
   .byte $00,$00,$00,$00
 
-  .byte $36,$07,$26,$37
+  .byte $36,$07,$17,$27 ; drip palette
   .byte $01,$02,$38,$3C
   .byte $01,$1C,$15,$14
   .byte $01,$02,$38,$3C
@@ -211,6 +223,7 @@ anus_attrs:
 drip_velocity: .res 8 ; each drip's velocity
 last_drop_appeared: .res 8 ; a timer for when the last drop appeared
 temp:           .res 1 ; temporary variable
+clenched: .res 1 ; whether the anus is clenched (press a to clench)
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update
@@ -263,53 +276,60 @@ animate_drop:
   sta $0200, y
 
   lda drip_velocity, x
-  cmp #$10 ; if it's equal to 10, skip increasing the thing
+  cmp #MAX_VELOCITY ; if it's at max velocity stop incrementing
   beq :+ ; skip incrementing
   inc drip_velocity, x ;increase drip velocity
 
 :
-  ; if drip is off-screen
+  ; if drip is at the end of it's fall
   lda $0200, y ; read in the y coordinate
   clc
-  sbc #$ef ; check if it's off screen
+  sbc #DRIP_END ; check if it's off screen
   bcc update_drop_colors; carry flag not set, so it's not off-screen
 
-  ; it is off screen
+  ; it is at the end
   lda #$01 
   sta drip_velocity, x  ; reset the drip velocity to 1
   lda #$20
-  sta last_drop_appeared, x
+  sta last_drop_appeared, x ; reset the drip timer
+  lda #OFFSCREEN
+  sta $0200, y   ; move the drip off-screen
+
+  ; lda clenched
+  ; cmp #0
+  ; bne update_drop_colors
+
+  ; lda #1
+  ; sta clenched
+  ; jsr vblankwait
+  ; jsr disable_rendering
+  ; jsr clear_bg
+  ; jsr draw_sm_anus
+  ; jsr draw_blurb
+  ; jsr enable_rendering
+
 
 update_drop_colors:
   ; update the drop colors basd on their y coordinate
   ; this is to simulate the fading as they fall
-  lda $0200, y
+  lda $0200, y ; get the y coordinate of the drop
   clc
-  sbc #150
-  bcc :+
+  sbc #DRIP_CHANGE_1     ; check if we're past this point.
+  bcc :+       ; if so, use the next color drop 
 
-  lda $0201, y
-  sta temp
-  inc temp
-  lda temp
+  lda #1 ; load the sprite index for this drop
+  sta $0201, y ; store it back
+
+:
+  lda $0200, y ; get the y coordinate of the drop
+  clc
+  sbc #DRIP_CHANGE_2     ; check if we're past this point
+  bcc :+       ; if so, update teh color of the drop again
+
+  lda #2
   sta $0201, y
 
 :
-  lda $0200, y
-  clc
-  sbc #170
-  bcc :+
-
-  lda $0201, y
-  sta temp
-  inc temp
-  lda temp
-  sta $0201, y
-
-:
-  cpx #$08 ; we did all 8
-  beq end
-
 next_drop:
   inx
   iny
@@ -317,7 +337,7 @@ next_drop:
   iny
   iny
 
-  cpx #$08 ; check if we're at the 8th sprite
+  cpx #DRIP_COUNT ; check if we're at the 8th sprite
   beq end  ; end our thing if so.
 
   jmp drip_loop
@@ -327,6 +347,9 @@ end:
   lda #$00
   sta $2005
   sta $2005
+
+; read the controller
+; clench if necessary
 
   rti
 
