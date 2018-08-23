@@ -220,6 +220,8 @@ anus_attrs:
 
 
 .segment "ZEROPAGE"
+nmi_lock: .res 1   ; set to 1 to prevent nmi reentry
+nmi_latch: .res 1   ; throttles animation speed.
 drip_velocity: .res 8 ; each drip's velocity
 last_drop_appeared: .res 8 ; a timer for when the last drop appeared
 temp:           .res 1 ; temporary variable
@@ -237,119 +239,46 @@ irq:
   rti
 
 nmi:
+  ; save registers
+	pha
+	txa
+	pha
+	tya
+	pha
+  ; prevent nmi reentry
+  lda nmi_lock
+  bne @nmi_end ; bail if we're in nmi still
+
+  inc nmi_lock
+
+  ; why am I doing this again?
   lda #$00
   sta $2003 ; set low byte of ram address
   lda #$02
   sta $4014 ; set the high byte of ram address
 
-  ; we want to iterate over each drop's last_drop_appeared value
-  ; if it's zero, we want to animate that drop.
-  ; if it's non-zero, we want to decrement it til it hits zero
-  ; if it hits zero after decrementing, move it to default position and animate
-  ; when it's off-screen, we want to re-set its last_appeared value to default.
+  ; do any drawing?
 
-  ldx #$00
-  ldy #$00
-drip_loop:
-  lda last_drop_appeared, x
-  cmp #$00 ; check if it's zero. if so, it's gonna be animated
-  beq animate_drop
+  dec nmi_lock ; free up nmi lock
 
-  dec last_drop_appeared, x ; decrement the value
+@nmi_end:
 
-  lda last_drop_appeared, x ; load it so we can check it
-  cmp #$00 ; check if it's zero
-  bne next_drop
-
-  ; the thing hit zero, so we need to initialize it before we start animating
-  lda drip_positions, y
-  sta $0200, y
-  lda #0
-  sta $0201, y
-
-  jmp animate_drop
-
-animate_drop:
-  lda $0200, y
-  clc
-  adc drip_velocity, x
-  sta $0200, y
-
-  lda drip_velocity, x
-  cmp #MAX_VELOCITY ; if it's at max velocity stop incrementing
-  beq :+ ; skip incrementing
-  inc drip_velocity, x ;increase drip velocity
-
-:
-  ; if drip is at the end of it's fall
-  lda $0200, y ; read in the y coordinate
-  clc
-  sbc #DRIP_END ; check if it's off screen
-  bcc update_drop_colors; carry flag not set, so it's not off-screen
-
-  ; it is at the end
-  lda #$01 
-  sta drip_velocity, x  ; reset the drip velocity to 1
-  lda #$20
-  sta last_drop_appeared, x ; reset the drip timer
-  lda #OFFSCREEN
-  sta $0200, y   ; move the drip off-screen
-
-  ; lda clenched
-  ; cmp #0
-  ; bne update_drop_colors
-
-  ; lda #1
-  ; sta clenched
-  ; jsr vblankwait
-  ; jsr disable_rendering
-  ; jsr clear_bg
-  ; jsr draw_sm_anus
-  ; jsr draw_blurb
-  ; jsr enable_rendering
-
-
-update_drop_colors:
-  ; update the drop colors basd on their y coordinate
-  ; this is to simulate the fading as they fall
-  lda $0200, y ; get the y coordinate of the drop
-  clc
-  sbc #DRIP_CHANGE_1     ; check if we're past this point.
-  bcc :+       ; if so, use the next color drop 
-
-  lda #1 ; load the sprite index for this drop
-  sta $0201, y ; store it back
-
-:
-  lda $0200, y ; get the y coordinate of the drop
-  clc
-  sbc #DRIP_CHANGE_2     ; check if we're past this point
-  bcc :+       ; if so, update teh color of the drop again
-
-  lda #2
-  sta $0201, y
-
-:
-next_drop:
-  inx
-  iny
-  iny
-  iny
-  iny
-
-  cpx #DRIP_COUNT ; check if we're at the 8th sprite
-  beq end  ; end our thing if so.
-
-  jmp drip_loop
-
-end:
-
+  ; why am I doing this again?
   lda #$00
   sta $2005
   sta $2005
 
 ; read the controller
 ; clench if necessary
+
+  ; restore registers and stuff
+	pla
+	tay
+	pla
+	tax
+	pla
+
+  inc nmi_latch
 
   rti
 
