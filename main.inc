@@ -33,7 +33,7 @@ main:
   jsr load_palettes
   jsr clear_bg
   jsr draw_big_anus
-  jsr draw_blurb
+
   jsr place_blood_drops
 
   jsr enable_rendering
@@ -165,12 +165,12 @@ draw_big_anus:
   lda #$00
   sta $2006             ; write the low byte of $2000 address
 
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
+  ldx #3
+  :
+    ldy #WIDTH_TILES
+    jsr blank_fill
+    dex
+    bne :-
 
   ldx #0              ; start out at 0
 @draw_big_anus_top_loop:
@@ -188,6 +188,12 @@ draw_big_anus:
   cpx #224
   bne @draw_big_anus_bottom_loop
 
+  jsr draw_gap
+  jsr draw_blurb
+
+  lda #0
+  sta clench_drawn ; update the drawn state
+
   rts
 
 draw_sm_anus:
@@ -197,12 +203,12 @@ draw_sm_anus:
   lda #$00
   sta $2006             ; write the low byte of $2000 address
 
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
+  ldx #4
+  :
+    ldy #WIDTH_TILES
+    jsr blank_fill
+    dex
+    bne :-
 
   ldx #0              ; start out at 0
 @draw_sm_anus_top_loop:
@@ -217,24 +223,38 @@ draw_sm_anus:
   lda sm_anus_bottom, x
   sta $2007 ; write to PPU
   inx
-  cpx #224
+  cpx #160
   bne @draw_sm_anus_bottom_loop
+
+  ; skip one more line
+  ldy #WIDTH_TILES
+  jsr blank_fill
+
+  jsr draw_gap
+  jsr draw_blurb
+
+  lda #1
+  sta clench_drawn ; update the drawn state
+
+  rts
+
+draw_gap:
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
 
   rts
 
 draw_blurb:
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
   ldy #8
   jsr blank_fill
 
@@ -257,6 +277,10 @@ draw_blurb:
   cpx #16
   bne @draw_blurb_loop_2
 
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
   rts
 
 load_attr:
@@ -386,7 +410,27 @@ drip_loop:
 @end_animate_frame:
   rts
 
+read_controller:
+  ; latch controller
+  lda #$01
+  sta $4016
+  lda #$00
+  sta $4016     ; TELL BOTH THE CONTROLLERS TO LATCH BUTTONS
+
+  lda $4016     ; player 1 - A
+  AND #%00000001
+
+  sta controller_1
+  
+  rts
+
 forever:
+  jsr read_controller
+
+  ; if the user is pressing A, we want to enable clench
+  lda controller_1
+  sta clenched ; we are clenched!
+
   lda nmi_latch
   cmp #0
   beq forever

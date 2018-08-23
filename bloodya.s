@@ -220,12 +220,14 @@ anus_attrs:
 
 
 .segment "ZEROPAGE"
-nmi_lock: .res 1   ; set to 1 to prevent nmi reentry
-nmi_latch: .res 1   ; throttles animation speed.
+controller_1: .res 1 ; state of controller 1
+clenched: .res 1 ; whether the anus is clenched (press a to clench)
+clench_drawn: .res 1 ; set to 1 once we draw the clench. set to 0 once we draw non-clenched.
+temp:           .res 1 ; temporary variable
 drip_velocity: .res 8 ; each drip's velocity
 last_drop_appeared: .res 8 ; a timer for when the last drop appeared
-temp:           .res 1 ; temporary variable
-clenched: .res 1 ; whether the anus is clenched (press a to clench)
+nmi_lock: .res 1   ; set to 1 to prevent nmi reentry
+nmi_latch: .res 1   ; throttles animation speed.
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update
@@ -257,11 +259,40 @@ nmi:
   lda #$02
   sta $4014 ; set the high byte of ram address
 
-  ; do any drawing?
+  ; update the background based on clench
+  ; load clenched
+  ; if clenched then
+  ;   load clench_drawn
+  ;   if clench_drawn, done.
+  ;   if not clench_drawn draw_sm_anus
+  ; if not clenched
+  ;   load clench_drawn
+  ;   if clench_drawn, draw_big_anus
+  ;   if not clench_drawn, done.
 
-  dec nmi_lock ; free up nmi lock
+  lda clenched
+  beq @not_clenched
+
+@is_clenched:
+    ; check if we have drawn clenched
+    lda clench_drawn
+    bne @nmi_end
+    jsr disable_rendering
+    jsr clear_bg
+    jsr draw_sm_anus
+    jmp @nmi_end
+
+@not_clenched:
+  lda clench_drawn
+  beq @nmi_end
+
+  jsr disable_rendering
+  jsr clear_bg
+  jsr draw_big_anus
 
 @nmi_end:
+  jsr enable_rendering
+  dec nmi_lock ; free up nmi lock
 
   ; why am I doing this again?
   lda #$00
