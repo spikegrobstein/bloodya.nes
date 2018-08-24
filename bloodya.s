@@ -277,8 +277,8 @@ nmi:
     ; check if we have drawn clenched
     lda clench_drawn
     bne @nmi_end
+
     jsr disable_rendering
-    jsr clear_bg
     jsr draw_sm_anus
     jmp @nmi_end
 
@@ -287,7 +287,6 @@ nmi:
   beq @nmi_end
 
   jsr disable_rendering
-  jsr clear_bg
   jsr draw_big_anus
 
 @nmi_end:

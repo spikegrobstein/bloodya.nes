@@ -162,15 +162,8 @@ draw_big_anus:
   lda $2002             ; read PPU status to reset the high/low latch
   lda #$20
   sta $2006             ; write the high byte of $2000 address
-  lda #$00
+  lda #$60
   sta $2006             ; write the low byte of $2000 address
-
-  ldx #3
-  :
-    ldy #WIDTH_TILES
-    jsr blank_fill
-    dex
-    bne :-
 
   ldx #0              ; start out at 0
 @draw_big_anus_top_loop:
@@ -188,7 +181,15 @@ draw_big_anus:
   cpx #224
   bne @draw_big_anus_bottom_loop
 
-  jsr draw_gap
+  ; jsr draw_gap
+  ; jsr draw_blurb
+
+  lda $2002   ; read PPU status to reset the high/low latch
+  lda #$22
+  sta $2006   ; write the high byte of $2000 address
+  lda #$c0    ; skip 80 tiles ahead
+  sta $2006   ; write the low byte of $2000 address
+
   jsr draw_blurb
 
   lda #0
@@ -197,18 +198,15 @@ draw_big_anus:
   rts
 
 draw_sm_anus:
-  lda $2002             ; read PPU status to reset the high/low latch
+  lda $2002   ; read PPU status to reset the high/low latch
   lda #$20
-  sta $2006             ; write the high byte of $2000 address
-  lda #$00
-  sta $2006             ; write the low byte of $2000 address
+  sta $2006   ; write the high byte of $2000 address
+  lda #$60    ; skip $60 tiles (3 rows) ahead
+  sta $2006   ; write the low byte of $2000 address
 
-  ldx #4
-  :
-    ldy #WIDTH_TILES
-    jsr blank_fill
-    dex
-    bne :-
+  ; skip one more line
+  ldy #WIDTH_TILES
+  jsr blank_fill
 
   ldx #0              ; start out at 0
 @draw_sm_anus_top_loop:
@@ -230,7 +228,15 @@ draw_sm_anus:
   ldy #WIDTH_TILES
   jsr blank_fill
 
-  jsr draw_gap
+  ; jsr draw_gap
+  ; jsr draw_blurb
+
+  lda $2002   ; read PPU status to reset the high/low latch
+  lda #$22    ; skip $02c0 tiles ahead
+  sta $2006   ; write the high byte of $2000 address
+  lda #$c0    ; 
+  sta $2006   ; write the low byte of $2000 address
+
   jsr draw_blurb
 
   lda #1
