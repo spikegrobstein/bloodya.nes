@@ -38,6 +38,7 @@ main:
 
   jsr place_blood_drops
 
+  jsr scroll_big_anus
   jsr enable_rendering
 
   jmp forever
@@ -235,7 +236,7 @@ draw_sm_anus:
   jsr blank_fill
 
   jsr draw_gap
-  jsr draw_blurb
+  jsr draw_sm_blurb
 
   rts
 
@@ -244,6 +245,49 @@ draw_gap:
   jsr blank_fill
   ldy #WIDTH_TILES
   jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+
+  rts
+
+draw_sm_blurb:
+  ldy #7
+  jsr blank_fill
+
+  ldx #0
+@draw_sm_blurb_loop_1:
+  lda blurb_tiles_1, x
+  sta $2007
+  inx
+  cpx #16
+  bne @draw_sm_blurb_loop_1
+
+  ldy #16
+  jsr blank_fill
+
+  ldx #0
+@draw_sm_blurb_loop_2:
+  lda blurb_tiles_2, x
+  sta $2007
+  inx
+  cpx #16
+  bne @draw_sm_blurb_loop_2
+
+  ldy #7
+  jsr blank_fill
+
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+
+
   ldy #WIDTH_TILES
   jsr blank_fill
   ldy #WIDTH_TILES
@@ -456,7 +500,7 @@ scroll_big_anus:
 
 scroll_sm_anus:
   lda $2002
-  lda #$ff ; scroll to 256 across (one complete screen)
+  lda #248 ; scroll to 256 across (one complete screen)
   sta $2005
   lda #0
   sta $2005
