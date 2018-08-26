@@ -30,9 +30,11 @@ chr_z = $23
 chr_qm = $24 ; questionmark
 
 main:
+  ; initialization
   jsr load_palettes
   jsr clear_bg
   jsr draw_big_anus
+  jsr draw_sm_anus
 
   jsr place_blood_drops
 
@@ -199,10 +201,17 @@ draw_big_anus:
 
 draw_sm_anus:
   lda $2002   ; read PPU status to reset the high/low latch
-  lda #$20
+  lda #$24
   sta $2006   ; write the high byte of $2000 address
-  lda #$60    ; skip $60 tiles (3 rows) ahead
+  lda #$00    ; skip $60 tiles (3 rows) ahead
   sta $2006   ; write the low byte of $2000 address
+
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
 
   ; skip one more line
   ldy #WIDTH_TILES
@@ -228,16 +237,16 @@ draw_sm_anus:
   ldy #WIDTH_TILES
   jsr blank_fill
 
-  ; jsr draw_gap
-  ; jsr draw_blurb
-
-  lda $2002   ; read PPU status to reset the high/low latch
-  lda #$22    ; skip $02c0 tiles ahead
-  sta $2006   ; write the high byte of $2000 address
-  lda #$c0    ; 
-  sta $2006   ; write the low byte of $2000 address
-
+  jsr draw_gap
   jsr draw_blurb
+
+  ; lda $2002   ; read PPU status to reset the high/low latch
+  ; lda #$24    ; skip $02c0 tiles ahead
+  ; sta $2006   ; write the high byte of $2000 address
+  ; lda #$c0    ; 
+  ; sta $2006   ; write the low byte of $2000 address
+
+  ; jsr draw_blurb
 
   lda #1
   sta clench_drawn ; update the drawn state
@@ -283,10 +292,24 @@ draw_blurb:
   cpx #16
   bne @draw_blurb_loop_2
 
+  ldy #8
+  jsr blank_fill
+
   ldy #WIDTH_TILES
   jsr blank_fill
   ldy #WIDTH_TILES
   jsr blank_fill
+
+
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
+
   rts
 
 load_attr:
@@ -432,6 +455,29 @@ read_controller:
 
   sta controller_1
   
+  rts
+
+scroll_big_anus:
+  lda $2002
+  lda #0
+  sta $2005
+  sta $2005
+
+  lda #0
+  sta clench_drawn ; update the drawn state
+
+  rts
+
+scroll_sm_anus:
+  lda $2002
+  lda #$ff
+  sta $2005
+  lda #0
+  sta $2005
+
+  lda #1
+  sta clench_drawn ; update the drawn state
+
   rts
 
 forever:

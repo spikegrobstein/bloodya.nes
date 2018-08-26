@@ -278,25 +278,27 @@ nmi:
     lda clench_drawn
     bne @nmi_end
 
-    jsr disable_rendering
-    jsr draw_sm_anus
+    ; jsr disable_rendering
+    ; jsr draw_sm_anus
+    jsr scroll_sm_anus
     jmp @nmi_end
 
 @not_clenched:
   lda clench_drawn
   beq @nmi_end
 
-  jsr disable_rendering
-  jsr draw_big_anus
+  ; jsr disable_rendering
+  ; jsr draw_big_anus
+  jsr scroll_big_anus
 
 @nmi_end:
-  jsr enable_rendering
+  ; jsr enable_rendering
   dec nmi_lock ; free up nmi lock
 
   ; why am I doing this again?
-  lda #$00
-  sta $2005
-  sta $2005
+  ; lda #$00
+  ; sta $2005
+  ; sta $2005
 
 ; read the controller
 ; clench if necessary
