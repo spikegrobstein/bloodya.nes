@@ -295,14 +295,6 @@ nmi:
   ; jsr enable_rendering
   dec nmi_lock ; free up nmi lock
 
-  ; why am I doing this again?
-  ; lda #$00
-  ; sta $2005
-  ; sta $2005
-
-; read the controller
-; clench if necessary
-
   ; restore registers and stuff
 	pla
 	tay

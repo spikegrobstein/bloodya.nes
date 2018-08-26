@@ -194,9 +194,6 @@ draw_big_anus:
 
   jsr draw_blurb
 
-  lda #0
-  sta clench_drawn ; update the drawn state
-
   rts
 
 draw_sm_anus:
@@ -239,17 +236,6 @@ draw_sm_anus:
 
   jsr draw_gap
   jsr draw_blurb
-
-  ; lda $2002   ; read PPU status to reset the high/low latch
-  ; lda #$24    ; skip $02c0 tiles ahead
-  ; sta $2006   ; write the high byte of $2000 address
-  ; lda #$c0    ; 
-  ; sta $2006   ; write the low byte of $2000 address
-
-  ; jsr draw_blurb
-
-  lda #1
-  sta clench_drawn ; update the drawn state
 
   rts
 
@@ -459,7 +445,7 @@ read_controller:
 
 scroll_big_anus:
   lda $2002
-  lda #0
+  lda #0 ; scroll back to the big anus screen
   sta $2005
   sta $2005
 
@@ -470,7 +456,7 @@ scroll_big_anus:
 
 scroll_sm_anus:
   lda $2002
-  lda #$ff
+  lda #$ff ; scroll to 256 across (one complete screen)
   sta $2005
   lda #0
   sta $2005
