@@ -220,12 +220,12 @@ anus_attrs:
 
 
 .segment "ZEROPAGE"
-controller_1: .res 1 ; state of controller 1 (is A pressed?)
-temp:           .res 1 ; temporary variable
-drip_velocity: .res 8 ; each drip's velocity
+controller_1:       .res 1 ; state of controller 1 (is A pressed?)
+temp:               .res 1 ; temporary variable
+drip_velocity:      .res 8 ; each drip's velocity
 last_drop_appeared: .res 8 ; a timer for when the last drop appeared
-nmi_lock: .res 1   ; set to 1 to prevent nmi reentry
-nmi_latch: .res 1   ; throttles animation speed.
+nmi_lock:           .res 1 ; set to 1 to prevent nmi reentry
+nmi_latch:          .res 1 ; throttles animation speed.
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update
