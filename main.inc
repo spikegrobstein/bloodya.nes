@@ -382,7 +382,7 @@ drip_loop:
   beq @animate_drop
 
   ; we only want to respawn drops if we're not clenched
-  lda clenched
+  lda controller_1
   bne @next_drop
 
   dec last_drop_appeared, x ; decrement the value
@@ -493,9 +493,6 @@ scroll_big_anus:
   sta $2005
   sta $2005
 
-  lda #0
-  sta clench_drawn ; update the drawn state
-
   rts
 
 scroll_sm_anus:
@@ -505,17 +502,10 @@ scroll_sm_anus:
   lda #0
   sta $2005
 
-  lda #1
-  sta clench_drawn ; update the drawn state
-
   rts
 
 forever:
   jsr read_controller
-
-  ; if the user is pressing A, we want to enable clench
-  lda controller_1
-  sta clenched ; we are clenched!
 
   lda nmi_latch
   cmp #0

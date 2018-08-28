@@ -220,9 +220,7 @@ anus_attrs:
 
 
 .segment "ZEROPAGE"
-controller_1: .res 1 ; state of controller 1
-clenched: .res 1 ; whether the anus is clenched (press a to clench)
-clench_drawn: .res 1 ; set to 1 once we draw the clench. set to 0 once we draw non-clenched.
+controller_1: .res 1 ; state of controller 1 (is A pressed?)
 temp:           .res 1 ; temporary variable
 drip_velocity: .res 8 ; each drip's velocity
 last_drop_appeared: .res 8 ; a timer for when the last drop appeared
@@ -259,36 +257,16 @@ nmi:
   lda #$02
   sta $4014 ; set the high byte of ram address
 
-  ; update the background based on clench
-  ; load clenched
-  ; if clenched then
-  ;   load clench_drawn
-  ;   if clench_drawn, done.
-  ;   if not clench_drawn draw_sm_anus
-  ; if not clenched
-  ;   load clench_drawn
-  ;   if clench_drawn, draw_big_anus
-  ;   if not clench_drawn, done.
-
-  lda clenched
+  ; if controller_1 has A pressed, then clench
+  ; otherwise, don't clench
+  lda controller_1
   beq @not_clenched
 
 @is_clenched:
-    ; check if we have drawn clenched
-    lda clench_drawn
-    bne @nmi_end
-
-    ; jsr disable_rendering
-    ; jsr draw_sm_anus
-    jsr scroll_sm_anus
-    jmp @nmi_end
+  jsr scroll_sm_anus
+  jmp @nmi_end
 
 @not_clenched:
-  lda clench_drawn
-  beq @nmi_end
-
-  ; jsr disable_rendering
-  ; jsr draw_big_anus
   jsr scroll_big_anus
 
 @nmi_end:
