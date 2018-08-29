@@ -39,6 +39,8 @@ main:
   jsr place_blood_drops
 
   jsr scroll_big_anus
+  jsr init_score
+
   jsr enable_rendering
 
   jmp forever
@@ -513,9 +515,19 @@ scroll_sm_anus:
   @end:
   rts
 
-draw_score:
+init_score:
+  lda #0
+  sta score
 
-  @end:
+  ; fill the rest of the score with $FF so we don't render it
+  ldx #1
+  lda #$ff
+  @init_score_loop:
+    sta score, x
+    inx
+    cpx #SCORE_SIZE
+    bne @init_score_loop
+
   rts
 
 ;
