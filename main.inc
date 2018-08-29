@@ -502,6 +502,40 @@ scroll_sm_anus:
   lda #0
   sta $2005
 
+  jsr increment_score
+
+  rts
+
+;
+; The score is basically just a byte array representing the decimal value
+; of each digit of the score.
+; when incrementing we want to increment the right-most byte and then
+; if the carry flag got set, we increment the next one. repeat.
+;
+increment_score:
+  ldx #0
+  @increment_score_loop:
+    cpx #SCORE_SIZE
+    beq @end
+
+    lda score, x ; read the current value
+    clc
+    adc #1 ; increment
+    sta score, x
+
+    cmp #10 ; did we hit 10 and need to carry
+    bne @end ; stop if we don't need to carry
+
+    ; roll it over to zero before continuing.
+    lda #0
+    sta score, x
+
+    inx
+
+    bcs @increment_score_loop
+  
+  @end:
+
   rts
 
 forever:
