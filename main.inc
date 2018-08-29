@@ -37,11 +37,10 @@ main:
   jsr draw_sm_anus
 
   jsr place_blood_drops
-
-  jsr scroll_big_anus
-
   jsr init_score
   jsr render_starting_score
+
+  jsr scroll_big_anus
 
   jsr enable_rendering
 
@@ -500,18 +499,21 @@ scroll_big_anus:
   rts
 
 scroll_sm_anus:
+  ; lda did_clench ; short-circuit if we're clenched
+  ; bne @end
+
+  lda $2002
+  lda #248 ; scroll to 256 - 8 across (one complete screen - one tile)
+  sta $2005
+  lda #0
+  sta $2005
+
   lda did_clench ; short-circuit if we're clenched
   bne @end
 
   lda #1 ; mark clenched
   sta did_clench
   
-  lda $2002
-  lda #248 ; scroll to 256 across (one complete screen)
-  sta $2005
-  lda #0
-  sta $2005
-
   jsr increment_score
 
   @end:
@@ -596,6 +598,35 @@ render_big_score:
   lda #$20
   sta $2006             ; write the high byte of $2000 address
   lda #$40+20
+  sta $2006             ; write the low byte of $2000 address
+
+  ldx #SCORE_SIZE-1
+  @render_score_loop:
+    cpx #$ff
+    beq @end
+
+    lda score, x ; read teh score digit
+
+    cmp #$ff ; $FF tiles are empty
+    bne :+   ; if it's not blank, go right to writing the value
+
+    lda #solids_0 ; override the value with an empty tile
+
+    :
+      sta $2007 ; write the value to PPU
+
+      dex
+      jmp @render_score_loop
+
+
+  @end:
+  rts
+
+render_sm_score:
+  lda $2002             ; read PPU status to reset the high/low latch
+  lda #$24
+  sta $2006             ; write the high byte of $2000 address
+  lda #$40+19
   sta $2006             ; write the low byte of $2000 address
 
   ldx #SCORE_SIZE-1

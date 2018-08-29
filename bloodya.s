@@ -254,11 +254,16 @@ nmi:
 
   inc nmi_lock
 
+
   ; why am I doing this again?
   lda #$00
   sta $2003 ; set low byte of ram address
   lda #$02
   sta $4014 ; set the high byte of ram address
+
+  jsr render_score
+
+  ; make siure we do all that scrolling stuff LAST
 
   ; if controller_1 has A pressed, then clench
   ; otherwise, don't clench
