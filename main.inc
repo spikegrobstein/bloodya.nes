@@ -576,7 +576,7 @@ render_starting_score:
   lda $2002             ; read PPU status to reset the high/low latch
   lda #$20
   sta $2006             ; write the high byte of $2000 address
-  lda #$42+9
+  lda #$40+29
   sta $2006             ; write the low byte of $2000 address
 
   lda #0
@@ -595,7 +595,7 @@ render_big_score:
   lda $2002             ; read PPU status to reset the high/low latch
   lda #$20
   sta $2006             ; write the high byte of $2000 address
-  lda #$42
+  lda #$40+20
   sta $2006             ; write the low byte of $2000 address
 
   ldx #SCORE_SIZE-1
