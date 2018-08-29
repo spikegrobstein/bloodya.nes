@@ -222,6 +222,7 @@ anus_attrs:
 
 .segment "ZEROPAGE"
 score:              .res 10 ; the number of times we've clenched. this is basically a byte array representing the score.
+did_clench:         .res 1  ; set this when we've clenched. this is a latch to help count clenches
 controller_1:       .res 1  ; state of controller 1 (is A pressed?)
 temp:               .res 1  ; temporary variable
 drip_velocity:      .res 8  ; each drip's velocity
@@ -274,8 +275,6 @@ nmi:
 @nmi_end:
   ; jsr enable_rendering
   dec nmi_lock ; free up nmi lock
-
-  jsr increment_score
 
   ; restore registers and stuff
 	pla
