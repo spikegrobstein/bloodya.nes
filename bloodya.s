@@ -2,12 +2,6 @@
 ; iNES header
 ;
 
-.segment "HEADER"
-
-INES_MAPPER = 0 ; 0 = NROM
-INES_MIRROR = 1 ; 0 = horizontal mirroring, 1 = vertical mirroring
-INES_SRAM   = 0 ; 1 = battery backed SRAM at $6000-7FFF
-
 ; constants
 OFFSCREEN     = $ef ; offscreen Y coordinate
 MAX_VELOCITY  = 10  ; max velocity for a drip
@@ -15,10 +9,17 @@ DRIP_CHANGE_1 = 90  ; first breakpoint for color change
 DRIP_CHANGE_2 = 120 ; second breakpoint for color change
 DRIP_END      = 150 ; the Y of the end of the fall
 DRIP_COUNT    = 8   ; number of drips we have
+SCORE_SIZE    = 10  ; number of bytes used for the score
 
 ; convenience constants
 WIDTH_TILES = 32
 HEIGHT_TILES = 30
+
+.segment "HEADER"
+
+INES_MAPPER = 0 ; 0 = NROM
+INES_MIRROR = 1 ; 0 = horizontal mirroring, 1 = vertical mirroring
+INES_SRAM   = 0 ; 1 = battery backed SRAM at $6000-7FFF
 
 .byte 'N', 'E', 'S', $1A ; ID
 .byte $02 ; 16k PRG bank count
