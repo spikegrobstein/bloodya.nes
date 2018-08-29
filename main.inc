@@ -133,8 +133,32 @@ place_blood_drops:
   rts
 
 clear_bg:
+  jsr clear_bg_a
+  jsr clear_bg_b
+
+clear_bg_a:
   lda $2002             ; read PPU status to reset the high/low latch
   lda #$20
+  sta $2006             ; write the high byte of $2000 address
+  lda #$00
+  sta $2006             ; write the low byte of $2000 address
+
+  lda #solids_0
+  ldy #HEIGHT_TILES
+@clear_bg_loop:
+  ldx #WIDTH_TILES
+  :
+    sta $2007
+    dex
+    bne :-
+  dey
+  bne @clear_bg_loop
+
+  rts
+
+clear_bg_b:
+  lda $2002             ; read PPU status to reset the high/low latch
+  lda #$24
   sta $2006             ; write the high byte of $2000 address
   lda #$00
   sta $2006             ; write the low byte of $2000 address
@@ -165,7 +189,7 @@ draw_big_anus:
   lda $2002             ; read PPU status to reset the high/low latch
   lda #$20
   sta $2006             ; write the high byte of $2000 address
-  lda #$60
+  lda #$a0
   sta $2006             ; write the low byte of $2000 address
 
   ldx #0              ; start out at 0
@@ -184,13 +208,10 @@ draw_big_anus:
   cpx #224
   bne @draw_big_anus_bottom_loop
 
-  ; jsr draw_gap
-  ; jsr draw_blurb
-
   lda $2002   ; read PPU status to reset the high/low latch
   lda #$22
   sta $2006   ; write the high byte of $2000 address
-  lda #$c0    ; skip 80 tiles ahead
+  lda #$e0    ; skip 80 tiles ahead
   sta $2006   ; write the low byte of $2000 address
 
   jsr draw_blurb
@@ -204,6 +225,10 @@ draw_sm_anus:
   lda #$00    ; skip $60 tiles (3 rows) ahead
   sta $2006   ; write the low byte of $2000 address
 
+  ldy #WIDTH_TILES
+  jsr blank_fill
+  ldy #WIDTH_TILES
+  jsr blank_fill
   ldy #WIDTH_TILES
   jsr blank_fill
   ldy #WIDTH_TILES
@@ -251,8 +276,6 @@ draw_gap:
   jsr blank_fill
   ldy #WIDTH_TILES
   jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
 
   rts
 
@@ -282,14 +305,6 @@ draw_sm_blurb:
   ldy #7
   jsr blank_fill
 
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
-
-
-  ldy #WIDTH_TILES
-  jsr blank_fill
   ldy #WIDTH_TILES
   jsr blank_fill
   ldy #WIDTH_TILES
@@ -331,10 +346,6 @@ draw_blurb:
   jsr blank_fill
 
 
-  ldy #WIDTH_TILES
-  jsr blank_fill
-  ldy #WIDTH_TILES
-  jsr blank_fill
   ldy #WIDTH_TILES
   jsr blank_fill
   ldy #WIDTH_TILES
@@ -423,20 +434,6 @@ drip_loop:
   lda #OFFSCREEN
   sta $0200, y   ; move the drip off-screen
 
-  ; lda clenched
-  ; cmp #0
-  ; bne update_drop_colors
-
-  ; lda #1
-  ; sta clenched
-  ; jsr vblankwait
-  ; jsr disable_rendering
-  ; jsr clear_bg
-  ; jsr draw_sm_anus
-  ; jsr draw_blurb
-  ; jsr enable_rendering
-
-
 @update_drop_colors:
   ; update the drop colors basd on their y coordinate
   ; this is to simulate the fading as they fall
@@ -512,6 +509,11 @@ scroll_sm_anus:
   sta $2005
 
   jsr increment_score
+
+  @end:
+  rts
+
+draw_score:
 
   @end:
   rts

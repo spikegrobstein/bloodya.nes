@@ -5,9 +5,9 @@
 ; constants
 OFFSCREEN     = $ef ; offscreen Y coordinate
 MAX_VELOCITY  = 10  ; max velocity for a drip
-DRIP_CHANGE_1 = 90  ; first breakpoint for color change
-DRIP_CHANGE_2 = 120 ; second breakpoint for color change
-DRIP_END      = 150 ; the Y of the end of the fall
+DRIP_CHANGE_1 = 120  ; first breakpoint for color change
+DRIP_CHANGE_2 = 150 ; second breakpoint for color change
+DRIP_END      = 180 ; the Y of the end of the fall
 DRIP_COUNT    = 8   ; number of drips we have
 SCORE_SIZE    = 10  ; number of bytes used for the score
 
@@ -113,15 +113,15 @@ main_palette:
   .byte $01,$02,$38,$3C
 
 drip_positions:
-  .byte $35,$00,%00000000,$70
-  .byte $42,$01,%00000000,$75
-  .byte $38,$02,%00000000,$80
-  .byte $32,$01,%00000000,$88
+  .byte $55,$00,%00000000,$70
+  .byte $62,$01,%00000000,$75
+  .byte $58,$02,%00000000,$80
+  .byte $52,$01,%00000000,$88
 
-  .byte $40,$02,%00000000,$82
-  .byte $44,$00,%00000000,$78
-  .byte $46,$01,%00000000,$89
-  .byte $30,$00,%00000000,$80
+  .byte $60,$02,%00000000,$82
+  .byte $64,$00,%00000000,$78
+  .byte $66,$01,%00000000,$89
+  .byte $50,$00,%00000000,$80
 
 drip_starting_timing:
   .byte 00,43,97,117
