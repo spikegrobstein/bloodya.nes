@@ -531,6 +531,14 @@ increment_score:
     beq @end
 
     lda score, x ; read the current value
+
+    ; since $ff is a placeholder,
+    ; if we're on it, we need to bump to zero so we increment correctly
+    cmp #$ff 
+    bne :+
+    lda #0
+
+    :
     clc
     adc #1 ; increment
     sta score, x
