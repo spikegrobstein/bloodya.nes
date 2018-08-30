@@ -14,26 +14,21 @@ place_blood_drops:
   lda drip_positions, x ; start with the initial drip position
   cpy #0 ; if y is not zero, we want to write a to the spot
          ; we do this because we want to place these drips off-screen, initially
-  bne @copy_drip_position
+  bne :+
+    lda #$ef ; make sure this badboy is offscreen
 
-  lda #$ef
-  sta $0200, x ; sprite should be off-screen
-  jmp @incrementors
-
-@copy_drip_position:
+  :
   sta $0200, x ; store it in the sprite memory
 
-@incrementors:  ; increment x and y
-  inx
+  inx ; increment x and y
   iny
 
   cpy #04 ; reset y if it hits 4 since we want to have it go 0,1,2,3,0,1,2,3
   bne :+
+    ldy #0
 
-  ldy #0
-
-:
-  cpx #$20 ; we're loading 32 ($20) bytes
+  :
+  cpx #32 ; we're loading 32 bytes
   bne @place_drip_loop
 
   ; now let's initialize the starting timing and velocities
@@ -41,15 +36,14 @@ place_blood_drops:
 @create_drip_loop:
   lda #1
   sta drip_velocity, x ; first set the starting velocity to 1
+
   lda drip_starting_timing, x ; then initialize all of the timings
   sta last_drop_appeared, x
-  inx
+
+  inx ; increment x
+
   cpx #DRIP_COUNT ; only do it 8x
   bne @create_drip_loop
-
-  ; set velocity to 1
-  lda #1
-  sta drip_velocity
 
   lda #%00010000 ; enable sprites
   sta $2001
@@ -62,7 +56,7 @@ animate_frame:
   ; if it hits zero after decrementing, move it to default position and animate
   ; when it's off-screen, we want to re-set its last_appeared value to default.
 
-  ldx #$00
+  ldx #0
   ldy #0
 @drip_loop:
   lda last_drop_appeared, x
@@ -94,9 +88,9 @@ animate_frame:
   lda drip_velocity, x
   cmp #MAX_VELOCITY ; if it's at max velocity stop incrementing
   beq :+ ; skip incrementing
-  inc drip_velocity, x ;increase drip velocity
+    inc drip_velocity, x ;increase drip velocity
 
-:
+  :
   ; if drip is at the end of it's fall
   lda $0200, y ; read in the y coordinate
   clc
