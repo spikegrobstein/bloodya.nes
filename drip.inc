@@ -9,13 +9,13 @@ place_blood_drops:
   sta $4014  ; set the high byte (02) of the RAM address, start the transfer
 
   ; first, let's create the placeholder sprite
-  lda #24 ; 3 rows down
+  lda #15 ; 2 rows down
   sta $0200
   lda #3
   sta $0201
   lda #%00000000
   sta $0202
-  lda #128
+  lda #112
   sta $0203
 
   ldx #0
