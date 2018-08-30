@@ -11,7 +11,7 @@ place_blood_drops:
   ; first, let's create the placeholder sprite
   lda #24 ; 3 rows down
   sta $0200
-  lda #1
+  lda #3
   sta $0201
   lda #%00000000
   sta $0202
