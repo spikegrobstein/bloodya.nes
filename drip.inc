@@ -8,6 +8,16 @@ place_blood_drops:
   lda #$02
   sta $4014  ; set the high byte (02) of the RAM address, start the transfer
 
+  ; first, let's create the placeholder sprite
+  lda #24 ; 3 rows down
+  sta $0200
+  lda #1
+  sta $0201
+  lda #%00000000
+  sta $0202
+  lda #128
+  sta $0203
+
   ldx #0
   ldy #0
 @place_drip_loop:
@@ -18,7 +28,7 @@ place_blood_drops:
     lda #$ef ; make sure this badboy is offscreen
 
   :
-  sta $0200, x ; store it in the sprite memory
+  sta $0200+4, x ; store it in the sprite memory
 
   inx ; increment x and y
   iny
@@ -75,15 +85,15 @@ animate_frame:
 
   ; the thing hit zero, so we need to initialize it before we start animating
   lda drip_positions, y
-  sta $0200, y
+  sta $0200+4, y
   lda #0
-  sta $0201, y
+  sta $0201+4, y
 
 @animate_drop:
-  lda $0200, y
+  lda $0200+4, y       ; first move the drop down 'velocity' pixels
   clc
   adc drip_velocity, x
-  sta $0200, y
+  sta $0200+4, y
 
   lda drip_velocity, x
   cmp #MAX_VELOCITY ; if it's at max velocity stop incrementing
@@ -92,7 +102,7 @@ animate_frame:
 
   :
   ; if drip is at the end of it's fall
-  lda $0200, y ; read in the y coordinate
+  lda $0200+4, y ; read in the y coordinate
   clc
   sbc #DRIP_END ; check if it's off screen
   bcc @update_drop_colors; carry flag not set, so it's not off-screen
@@ -103,27 +113,27 @@ animate_frame:
   lda #$20
   sta last_drop_appeared, x ; reset the drip timer
   lda #OFFSCREEN
-  sta $0200, y   ; move the drip off-screen
+  sta $0200+4, y   ; move the drip off-screen
 
 @update_drop_colors:
   ; update the drop colors basd on their y coordinate
   ; this is to simulate the fading as they fall
-  lda $0200, y ; get the y coordinate of the drop
+  lda $0200+4, y ; get the y coordinate of the drop
   clc
   sbc #DRIP_CHANGE_1     ; check if we're past this point.
   bcc :+       ; if so, use the next color drop 
 
   lda #1 ; load the sprite index for this drop
-  sta $0201, y ; store it back
+  sta $0201+4, y ; store it back
 
 :
-  lda $0200, y ; get the y coordinate of the drop
+  lda $0200+4, y ; get the y coordinate of the drop
   clc
   sbc #DRIP_CHANGE_2     ; check if we're past this point
   bcc :+       ; if so, update teh color of the drop again
 
   lda #2
-  sta $0201, y
+  sta $0201+4, y
 
 :
 @next_drop:
