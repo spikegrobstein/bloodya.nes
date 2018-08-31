@@ -5,7 +5,7 @@
 ; constants
 OFFSCREEN     = $ef ; offscreen Y coordinate
 MAX_VELOCITY  = 10  ; max velocity for a drip
-DRIP_CHANGE_1 = 120  ; first breakpoint for color change
+DRIP_CHANGE_1 = 120 ; first breakpoint for color change
 DRIP_CHANGE_2 = 150 ; second breakpoint for color change
 DRIP_END      = 180 ; the Y of the end of the fall
 DRIP_COUNT    = 8   ; number of drips we have
@@ -250,10 +250,9 @@ nmi:
 	pha
   ; prevent nmi reentry
   lda nmi_lock
-  bne @nmi_end ; bail if we're in nmi still
+  bne @nmi_bail ; bail if we're in nmi still
 
   inc nmi_lock
-
 
   ; why am I doing this again?
   lda #$00
@@ -263,24 +262,11 @@ nmi:
 
   jsr render_score
 
-  ; make siure we do all that scrolling stuff LAST
-
-  ; if controller_1 has A pressed, then clench
-  ; otherwise, don't clench
-  lda controller_1
-  beq @not_clenched
-
-@is_clenched:
-  jsr scroll_sm_anus
-  jmp @nmi_end
-
-@not_clenched:
-  jsr scroll_big_anus
-
 @nmi_end:
   ; jsr enable_rendering
   dec nmi_lock ; free up nmi lock
 
+@nmi_bail:
   ; restore registers and stuff
 	pla
 	tay

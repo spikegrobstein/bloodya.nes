@@ -327,10 +327,47 @@ render_sm_score:
 forever:
   jsr read_controller
 
+  ; wait for nmi to complete a cycle
   lda nmi_latch
   cmp #0
   beq forever
 
+  ; scroll the big anus first
+  ; we need t do this to ensure that the header isn't scrolled
+  jsr scroll_big_anus
+
+  ; handle split scroll
+  @sprite_0_wait_clear:
+    bit $2002
+    bvs @sprite_0_wait_clear
+  @sprite_0_wait:
+    bit $2002
+    bvc @sprite_0_wait
+
+  ; if controller_1 has A pressed, then clench
+  ; otherwise, don't clench
+  lda controller_1
+  beq @not_clenched
+
+  @is_clenched:
+    jsr scroll_sm_anus
+    lda did_clench ; short-circuit if we're clenched
+    bne :+
+
+    lda #1 ; mark clenched
+    sta did_clench
+    
+    jsr increment_score
+
+    jmp :+
+
+  @not_clenched:
+    lda #0
+    sta did_clench ; turn off clench, always
+
+    jsr scroll_big_anus
+  
+  :
   jsr animate_frame
 
   ; reset the latch back to zero

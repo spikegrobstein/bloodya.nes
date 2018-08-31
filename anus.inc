@@ -1,7 +1,4 @@
 scroll_big_anus:
-  lda #0
-  sta did_clench ; turn off clench, always
-
   lda $2002
   lda #0 ; scroll back to the big anus screen
   sta $2005
@@ -10,24 +7,12 @@ scroll_big_anus:
   rts
 
 scroll_sm_anus:
-  ; lda did_clench ; short-circuit if we're clenched
-  ; bne @end
-
   lda $2002
   lda #248 ; scroll to 256 - 8 across (one complete screen - one tile)
   sta $2005
   lda #0
   sta $2005
 
-  lda did_clench ; short-circuit if we're clenched
-  bne @end
-
-  lda #1 ; mark clenched
-  sta did_clench
-  
-  jsr increment_score
-
-  @end:
   rts
 
 draw_big_anus:
