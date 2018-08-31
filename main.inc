@@ -248,58 +248,13 @@ render_starting_score:
   lda #chr_e
   sta $2007
 
-  lda $2002             ; read PPU status to reset the high/low latch
-  lda #$20
-  sta $2006             ; write the high byte of $2000 address
-  lda #$40+20
-  sta $2006             ; write the low byte of $2000 address
-
-  lda #0
-  sta $2007
-
-  rts
-
+  ; then fall through to rendering the score itself.
 
 render_score:
-  jsr render_big_score  
-  ; jsr render_sm_score
-  rts
-
-
-render_big_score:
   lda $2002             ; read PPU status to reset the high/low latch
   lda #$20
   sta $2006             ; write the high byte of $2000 address
   lda #$40+20
-  sta $2006             ; write the low byte of $2000 address
-
-  ldx #SCORE_SIZE-1
-  @render_score_loop:
-    cpx #$ff
-    beq @end
-
-    lda score, x ; read teh score digit
-
-    cmp #$ff ; $FF tiles are empty
-    bne :+   ; if it's not blank, go right to writing the value
-
-    lda #solids_0 ; override the value with an empty tile
-
-    :
-      sta $2007 ; write the value to PPU
-
-      dex
-      jmp @render_score_loop
-
-
-  @end:
-  rts
-
-render_sm_score:
-  lda $2002             ; read PPU status to reset the high/low latch
-  lda #$24
-  sta $2006             ; write the high byte of $2000 address
-  lda #$40+19
   sta $2006             ; write the low byte of $2000 address
 
   ldx #SCORE_SIZE-1
