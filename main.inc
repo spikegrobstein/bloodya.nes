@@ -32,7 +32,7 @@ chr_qm = $24 ; questionmark
 .include "anus.inc"
 .include "drip.inc"
 
-main:
+init:
   inc nmi_lock ; prevent NMI entry, which will update PPU
 
   ; initialization
@@ -57,8 +57,59 @@ main:
   jsr enable_rendering
   dec nmi_lock ; allow NMI entry again
 
-  ; main loop
-  jmp forever
+  ; fall through to main loop
+  ;
+main_loop:
+  jsr read_controller
+
+  ; wait for nmi to complete a cycle
+  lda nmi_latch
+  cmp #0
+  beq main_loop
+
+  ; scroll the big anus first
+  ; we need t do this to ensure that the header isn't scrolled
+  jsr scroll_big_anus
+
+  ; handle split scroll
+  @sprite_0_wait_clear:
+    bit $2002
+    bvs @sprite_0_wait_clear
+  @sprite_0_wait:
+    bit $2002
+    bvc @sprite_0_wait
+
+  ; if controller_1 has A pressed, then clench
+  ; otherwise, don't clench
+  lda controller_1
+  beq @not_clenched
+
+  @is_clenched:
+    jsr scroll_sm_anus
+    lda did_clench ; short-circuit if we're clenched
+    bne :+
+
+    lda #1 ; mark clenched
+    sta did_clench
+    
+    jsr increment_score
+
+    jmp :+
+
+  @not_clenched: ; relax...
+    lda #0
+    sta did_clench ; turn off clench, always
+
+    jsr scroll_big_anus
+  
+  :
+  jsr animate_frame
+
+  ; reset the latch back to zero
+  lda #0
+  sta nmi_latch
+  
+  jmp main_loop
 
 disable_rendering:
   lda #0
@@ -287,56 +338,4 @@ render_score:
 
   @end:
   rts
-
-forever:
-  jsr read_controller
-
-  ; wait for nmi to complete a cycle
-  lda nmi_latch
-  cmp #0
-  beq forever
-
-  ; scroll the big anus first
-  ; we need t do this to ensure that the header isn't scrolled
-  jsr scroll_big_anus
-
-  ; handle split scroll
-  @sprite_0_wait_clear:
-    bit $2002
-    bvs @sprite_0_wait_clear
-  @sprite_0_wait:
-    bit $2002
-    bvc @sprite_0_wait
-
-  ; if controller_1 has A pressed, then clench
-  ; otherwise, don't clench
-  lda controller_1
-  beq @not_clenched
-
-  @is_clenched:
-    jsr scroll_sm_anus
-    lda did_clench ; short-circuit if we're clenched
-    bne :+
-
-    lda #1 ; mark clenched
-    sta did_clench
-    
-    jsr increment_score
-
-    jmp :+
-
-  @not_clenched: ; relax...
-    lda #0
-    sta did_clench ; turn off clench, always
-
-    jsr scroll_big_anus
-  
-  :
-  jsr animate_frame
-
-  ; reset the latch back to zero
-  lda #0
-  sta nmi_latch
-  
-  jmp forever
 

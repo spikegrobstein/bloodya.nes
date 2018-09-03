@@ -101,7 +101,7 @@ reset:
   jsr vblankwait
 
   ; ok, we can start the program
-  jmp main
+  jmp init
 
 vblankwait:
   bit $2002
