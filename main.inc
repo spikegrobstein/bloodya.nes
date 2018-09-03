@@ -33,6 +33,8 @@ chr_qm = $24 ; questionmark
 .include "drip.inc"
 
 main:
+  inc nmi_lock ; prevent NMI entry, which will update PPU
+
   ; initialization
   jsr load_palettes
   jsr clear_bg
@@ -42,10 +44,11 @@ main:
   jsr place_blood_drops
   jsr init_score
   jsr render_starting_score
-
   jsr scroll_big_anus
 
   jsr enable_rendering
+
+  dec nmi_lock ; allow NMI entry again
 
   jmp forever
 
@@ -266,15 +269,13 @@ render_score:
 
     cmp #$ff ; $FF tiles are empty
     bne :+   ; if it's not blank, go right to writing the value
-
-    lda #solids_0 ; override the value with an empty tile
+      lda #solids_0 ; override the value with an empty tile
 
     :
       sta $2007 ; write the value to PPU
 
       dex
       jmp @render_score_loop
-
 
   @end:
   rts
@@ -316,7 +317,7 @@ forever:
 
     jmp :+
 
-  @not_clenched:
+  @not_clenched: ; relax...
     lda #0
     sta did_clench ; turn off clench, always
 
