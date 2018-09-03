@@ -37,19 +37,27 @@ main:
 
   ; initialization
   jsr load_palettes
+
+  ; blank the background and draw the 2 main screens
   jsr clear_bg
   jsr draw_big_anus
   jsr draw_sm_anus
 
-  jsr place_blood_drops
+  ; set up the score
   jsr init_score
   jsr render_starting_score
+
+  ; initialize the drops
+  jsr place_blood_drops
+
+  ; initialize the scroll position
   jsr scroll_big_anus
 
+  ; finish up
   jsr enable_rendering
-
   dec nmi_lock ; allow NMI entry again
 
+  ; main loop
   jmp forever
 
 disable_rendering:
