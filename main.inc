@@ -73,10 +73,10 @@ main_loop:
 
   ; handle split scroll
   @sprite_0_wait_clear:
-    bit $2002
+    bit PPUSTATUS
     bvs @sprite_0_wait_clear
   @sprite_0_wait:
-    bit $2002
+    bit PPUSTATUS
     bvc @sprite_0_wait
 
   ; if controller_1 has A pressed, then clench
@@ -113,31 +113,31 @@ main_loop:
 
 disable_rendering:
   lda #0
-  sta $2000
-  sta $2001
+  sta PPUCTRL
+  sta PPUMASK
   rts
 
 enable_rendering:
 
   lda #%00011110 ; enable sprites, enable background
-  sta $2001
+  sta PPUMASK
 
   lda #%10010000 ;enable NMI, sprites from Pattern 0, background from Pattern 1
-  sta $2000
+  sta PPUCTRL
 
   rts
 
 
 load_palettes:
-  lda $2002 ; read PPU status to reset the latch
+  lda PPUSTATUS ; read PPU status to reset the latch
   lda #$3f
-  sta $2006 ; write the hi byte
+  sta PPUADDR ; write the hi byte
   lda #$00
-  sta $2006 ; write the low byte
+  sta PPUADDR ; write the low byte
   ldx #$00
 @load_palettes_loop:
   lda main_palette, x  ; load palette byte
-  sta $2007       ; write to ppu
+  sta PPUDATA       ; write to ppu
   inx             ; move to next byte
   cpx #$20
   bne @load_palettes_loop  ; if x = $20, we copied all 32 bytes, so we're done
@@ -149,18 +149,18 @@ clear_bg:
   jsr @clear_bg_b
 
 @clear_bg_a:
-  lda $2002             ; read PPU status to reset the high/low latch
+  lda PPUSTATUS             ; read PPU status to reset the high/low latch
   lda #$20
-  sta $2006             ; write the high byte of $2000 address
+  sta PPUADDR             ; write the high byte of $2000 address
   lda #$00
-  sta $2006             ; write the low byte of $2000 address
+  sta PPUADDR             ; write the low byte of $2000 address
 
   lda #solids_0
   ldy #HEIGHT_TILES
 @clear_bg_a_loop:
   ldx #WIDTH_TILES
   :
-    sta $2007
+    sta PPUDATA
     dex
     bne :-
   dey
@@ -169,18 +169,18 @@ clear_bg:
   rts
 
 @clear_bg_b:
-  lda $2002             ; read PPU status to reset the high/low latch
+  lda PPUSTATUS             ; read PPU status to reset the high/low latch
   lda #$24
-  sta $2006             ; write the high byte of $2000 address
+  sta PPUADDR             ; write the high byte of $2000 address
   lda #$00
-  sta $2006             ; write the low byte of $2000 address
+  sta PPUADDR             ; write the low byte of $2000 address
 
   lda #solids_0
   ldy #HEIGHT_TILES
 @clear_bg_b_loop:
   ldx #WIDTH_TILES
   :
-    sta $2007
+    sta PPUDATA
     dex
     bne :-
   dey
@@ -192,22 +192,22 @@ clear_bg:
 blank_fill:
     lda #solids_0
     :
-  sta $2007
+  sta PPUDATA
   dey
   bne :-
   rts
 
 load_attr:
-  lda $2002             ; read PPU status to reset the high/low latch
+  lda PPUSTATUS             ; read PPU status to reset the high/low latch
   lda #$23
-  sta $2006             ; write the high byte of $23C0 address
+  sta PPUADDR             ; write the high byte of $23C0 address
   lda #$C0
-  sta $2006             ; write the low byte of $23C0 address
+  sta PPUADDR             ; write the low byte of $23C0 address
 
   ldx #$00
 :
   lda #$00
-  sta $2007
+  sta PPUDATA
   inx
   cpx #20
   bne :-
@@ -215,7 +215,7 @@ load_attr:
   ldx #$00              ; start out at 0
 load_attr_loop:
   lda anus_attrs ,x
-  sta $2007
+  sta PPUDATA
   inx
   cpx #10
   bne load_attr_loop
@@ -331,7 +331,7 @@ render_score:
       lda #solids_0 ; override the value with an empty tile
 
     :
-      sta $2007 ; write the value to PPU
+      sta PPUDATA ; write the value to PPU
 
       dex
       jmp @render_score_loop

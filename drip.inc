@@ -4,9 +4,9 @@ place_blood_drops:
   sta last_drop_appeared
 
   lda #$00
-  sta $2003  ; set the low byte (00) of the RAM address
+  sta OAMADDR  ; set the low byte (00) of the RAM address
   lda #$02
-  sta $4014  ; set the high byte (02) of the RAM address, start the transfer
+  sta OAMDMA  ; set the high byte (02) of the RAM address, start the transfer
 
   ; first, let's create the placeholder sprite
   lda #15 ; 2 rows down
@@ -56,7 +56,7 @@ place_blood_drops:
   bne @create_drip_loop
 
   lda #%00010000 ; enable sprites
-  sta $2001
+  sta PPUMASK
   rts
 
 animate_frame:

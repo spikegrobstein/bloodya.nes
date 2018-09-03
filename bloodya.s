@@ -267,9 +267,9 @@ nmi:
 
   ; why am I doing this again?
   lda #$00
-  sta $2003 ; set low byte of ram address
+  sta OAMADDR ; set low byte of ram address
   lda #$02
-  sta $4014 ; set the high byte of ram address
+  sta OAMDMA ; set the high byte of ram address
 
   jsr render_score
 
