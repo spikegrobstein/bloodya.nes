@@ -234,31 +234,31 @@ increment_score:
   rts
 
 render_starting_score:
-  lda $2002             ; read PPU status to reset the high/low latch
+  lda PPUSTATUS            ; read PPU status to reset the high/low latch
   lda #$20
-  sta $2006             ; write the high byte of $2000 address
-  lda #$40+14
-  sta $2006             ; write the low byte of $2000 address
+  sta PPUADDR             ; write the high byte of $2000 address
+  lda #$40+10
+  sta PPUADDR             ; write the low byte of $2000 address
 
   lda #chr_s
-  sta $2007
+  sta PPUDATA
   lda #chr_c
-  sta $2007
+  sta PPUDATA
   lda #chr_o
-  sta $2007
+  sta PPUDATA
   lda #chr_r
-  sta $2007
+  sta PPUDATA
   lda #chr_e
-  sta $2007
+  sta PPUDATA
 
   ; then fall through to rendering the score itself.
 
 render_score:
-  lda $2002             ; read PPU status to reset the high/low latch
+  lda PPUSTATUS             ; read PPU status to reset the high/low latch
   lda #$20
-  sta $2006             ; write the high byte of $2000 address
+  sta PPUADDR             ; write the high byte of $2000 address
   lda #$40+20
-  sta $2006             ; write the low byte of $2000 address
+  sta PPUADDR             ; write the low byte of $2000 address
 
   ldx #SCORE_SIZE-1
   @render_score_loop:

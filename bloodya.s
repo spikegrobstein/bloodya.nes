@@ -15,6 +15,17 @@ SCORE_SIZE    = 10  ; number of bytes used for the score
 WIDTH_TILES = 32
 HEIGHT_TILES = 30
 
+; PPU addresses
+PPUCTRL   = $2000
+PPUMASK   = $2001
+PPUSTATUS = $2002
+OAMADDR   = $2003
+OAMDATA   = $2004
+PPUSCROLL = $2005
+PPUADDR   = $2006
+PPUDATA   = $2007
+OAMDMA    = $4014
+
 .segment "HEADER"
 
 INES_MAPPER = 0 ; 0 = NROM
