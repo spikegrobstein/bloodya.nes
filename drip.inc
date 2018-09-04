@@ -10,13 +10,13 @@ place_blood_drops:
 
   ; first, let's create the placeholder sprite
   lda #15 ; 2 rows down
-  sta $0200
+  sta $0200 ; write y
   lda #3
-  sta $0201
+  sta $0201 ; write tile index
   lda #%00000000
-  sta $0202
-  lda #112
-  sta $0203
+  sta $0202 ; write attributes
+  lda #64
+  sta $0203 ; write x
 
   ldx #0
   ldy #0

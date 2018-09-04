@@ -34,24 +34,23 @@ chr_qm = $24 ; questionmark
 
 init:
   inc nmi_lock ; prevent NMI entry, which will update PPU
+  jsr disable_rendering
+
+  jsr init_score
 
   ; initialization
   jsr load_palettes
 
   ; blank the background and draw the 2 main screens
+  ; this touches the PPU background tiles
   jsr clear_bg
+  jsr render_score_text
   jsr draw_big_anus
   jsr draw_sm_anus
 
-  ; set up the score
-  jsr init_score
-  jsr render_starting_score
-
   ; initialize the drops
+  ; this only touches sprites
   jsr place_blood_drops
-
-  ; initialize the scroll position
-  jsr scroll_big_anus
 
   ; finish up
   jsr enable_rendering
@@ -63,6 +62,8 @@ main_loop:
   jsr read_controller
 
   ; wait for nmi to complete a cycle
+  ; the NMI will increment nmi_latch when it completes
+  ; so don't do anything until we've rendered a frame
   lda nmi_latch
   cmp #0
   beq main_loop
@@ -292,11 +293,11 @@ increment_score:
   
   rts
 
-render_starting_score:
+render_score_text:
   lda PPUSTATUS            ; read PPU status to reset the high/low latch
-  lda #$20
+  lda #>NAMETABLE1
   sta PPUADDR             ; write the high byte of $2000 address
-  lda #$40+10
+  lda #<NAMETABLE1+$40+8
   sta PPUADDR             ; write the low byte of $2000 address
 
   lda #chr_s
@@ -309,15 +310,17 @@ render_starting_score:
   sta PPUDATA
   lda #chr_e
   sta PPUDATA
+  lda #solids_0
+  sta PPUDATA
 
   ; then fall through to rendering the score itself.
 
 render_score:
   lda PPUSTATUS             ; read PPU status to reset the high/low latch
-  lda #$20
-  sta PPUADDR             ; write the high byte of $2000 address
-  lda #$40+20
-  sta PPUADDR             ; write the low byte of $2000 address
+  lda #>NAMETABLE1
+  sta PPUADDR             ; write the high byte
+  lda #<NAMETABLE1+$40+14
+  sta PPUADDR             ; write the low byte
 
   ldx #SCORE_SIZE-1
   @render_score_loop:
