@@ -23,20 +23,20 @@ draw_big_anus:
   sta PPUADDR             ; write the low byte of $2000 address
 
   ldx #0              ; start out at 0
-@draw_big_anus_top_loop:
-  lda big_anus_top, x
-  sta PPUDATA ; write to PPU
-  inx
-  cpx #192
-  bne @draw_big_anus_top_loop
+  @draw_big_anus_top_loop:
+    lda big_anus_top, x
+    sta PPUDATA ; write to PPU
+    inx
+    cpx #192
+    bne @draw_big_anus_top_loop
 
   ldx #0              ; start out at 0
-@draw_big_anus_bottom_loop:
-  lda big_anus_bottom, x
-  sta PPUDATA ; write to PPU
-  inx
-  cpx #224
-  bne @draw_big_anus_bottom_loop
+  @draw_big_anus_bottom_loop:
+    lda big_anus_bottom, x
+    sta PPUDATA ; write to PPU
+    inx
+    cpx #224
+    bne @draw_big_anus_bottom_loop
 
   lda PPUSTATUS   ; read PPU status to reset the high/low latch
   lda #$22

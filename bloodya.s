@@ -263,6 +263,7 @@ nmi:
 	pha
 	tya
 	pha
+
   ; prevent nmi reentry
   lda nmi_lock
   bne @nmi_bail ; bail if we're in nmi still

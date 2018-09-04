@@ -237,7 +237,10 @@ read_controller:
   
   rts
 
-
+;
+; set the score to 0 and fill out the rest of the
+; score with $ff values (blank tiles)
+;
 init_score:
   lda #0
   sta score
@@ -324,8 +327,8 @@ render_score:
 
   ldx #SCORE_SIZE-1
   @render_score_loop:
-    cpx #$ff
-    beq @end
+    cpx #$ff ; we are counting down to zero
+    beq @end ; when we go past, we're done.
 
     lda score, x ; read teh score digit
 
