@@ -26,6 +26,10 @@ PPUADDR   = $2006
 PPUDATA   = $2007
 OAMDMA    = $4014
 
+; Nametable Addresses
+NAMETABLE1 = $2000
+NAMETABLE2 = $2400
+
 .segment "HEADER"
 
 INES_MAPPER = 0 ; 0 = NROM
