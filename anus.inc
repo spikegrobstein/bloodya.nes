@@ -1,17 +1,17 @@
 scroll_big_anus:
   lda PPUSTATUS
   lda #0 ; scroll back to the big anus screen
-  sta $2005
-  sta $2005
+  sta PPUSCROLL
+  sta PPUSCROLL
 
   rts
 
 scroll_sm_anus:
   lda PPUSTATUS
   lda #248 ; scroll to 256 - 8 across (one complete screen - one tile)
-  sta $2005
+  sta PPUSCROLL
   lda #0
-  sta $2005
+  sta PPUSCROLL
 
   rts
 
