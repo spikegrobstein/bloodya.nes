@@ -31,8 +31,12 @@ chr_qm = $24 ; questionmark
 
 .include "anus.inc"
 .include "drip.inc"
+.include "splash.inc"
 
 init:
+  jsr init_splash
+
+init_main:
   inc nmi_lock ; prevent NMI entry, which will update PPU
   jsr disable_rendering
 
@@ -119,7 +123,6 @@ disable_rendering:
   rts
 
 enable_rendering:
-
   lda #%00011110 ; enable sprites, enable background
   sta PPUMASK
 
@@ -135,67 +138,72 @@ load_palettes:
   sta PPUADDR ; write the hi byte
   lda #$00
   sta PPUADDR ; write the low byte
+
   ldx #$00
-@load_palettes_loop:
-  lda main_palette, x  ; load palette byte
-  sta PPUDATA       ; write to ppu
-  inx             ; move to next byte
-  cpx #$20
-  bne @load_palettes_loop  ; if x = $20, we copied all 32 bytes, so we're done
-  rts
+  @load_palettes_loop:
+    lda main_palette, x  ; load palette byte
+    sta PPUDATA       ; write to ppu
+
+    inx             ; move to next byte
+
+    cpx #$20
+    bne @load_palettes_loop  ; if x = $20, we copied all 32 bytes, so we're done
+
+    rts
 
 
 clear_bg:
   jsr @clear_bg_a
   jsr @clear_bg_b
 
-@clear_bg_a:
-  lda PPUSTATUS             ; read PPU status to reset the high/low latch
-  lda #$20
-  sta PPUADDR             ; write the high byte of $2000 address
-  lda #$00
-  sta PPUADDR             ; write the low byte of $2000 address
+  @clear_bg_a:
+    lda PPUSTATUS             ; read PPU status to reset the high/low latch
+    lda #$20
+    sta PPUADDR             ; write the high byte of $2000 address
+    lda #$00
+    sta PPUADDR             ; write the low byte of $2000 address
 
   lda #solids_0
   ldy #HEIGHT_TILES
-@clear_bg_a_loop:
-  ldx #WIDTH_TILES
-  :
-    sta PPUDATA
-    dex
-    bne :-
-  dey
-  bne @clear_bg_a_loop
+  @clear_bg_a_loop:
+    ldx #WIDTH_TILES
+    :
+      sta PPUDATA
+      dex
+      bne :-
+    dey
+    bne @clear_bg_a_loop
 
   rts
 
-@clear_bg_b:
-  lda PPUSTATUS             ; read PPU status to reset the high/low latch
-  lda #$24
-  sta PPUADDR             ; write the high byte of $2000 address
-  lda #$00
-  sta PPUADDR             ; write the low byte of $2000 address
+  @clear_bg_b:
+    lda PPUSTATUS             ; read PPU status to reset the high/low latch
+    lda #$24
+    sta PPUADDR             ; write the high byte of $2000 address
+    lda #$00
+    sta PPUADDR             ; write the low byte of $2000 address
 
   lda #solids_0
   ldy #HEIGHT_TILES
-@clear_bg_b_loop:
-  ldx #WIDTH_TILES
-  :
-    sta PPUDATA
-    dex
-    bne :-
-  dey
-  bne @clear_bg_b_loop
+  @clear_bg_b_loop:
+    ldx #WIDTH_TILES
+    :
+      sta PPUDATA
+      dex
+      bne :-
+    dey
+    bne @clear_bg_b_loop
 
   rts
 
 ; fill number of blocks as stored in X
 blank_fill:
-    lda #solids_0
-    :
-  sta PPUDATA
-  dey
-  bne :-
+  lda #solids_0
+  :
+    sta PPUDATA
+    dey
+    bne :-
+
   rts
 
 load_attr:
@@ -206,20 +214,20 @@ load_attr:
   sta PPUADDR             ; write the low byte of $23C0 address
 
   ldx #$00
-:
-  lda #$00
-  sta PPUDATA
-  inx
-  cpx #20
-  bne :-
+  :
+    lda #$00
+    sta PPUDATA
+    inx
+    cpx #20
+    bne :-
 
   ldx #$00              ; start out at 0
-load_attr_loop:
-  lda anus_attrs ,x
-  sta PPUDATA
-  inx
-  cpx #10
-  bne load_attr_loop
+  load_attr_loop:
+    lda anus_attrs ,x
+    sta PPUDATA
+    inx
+    cpx #10
+    bne load_attr_loop
 
   rts ; return from draw_anus subroutine
 
@@ -274,7 +282,7 @@ increment_score:
     ; if we're on it, we need to bump to zero so we increment correctly
     cmp #$ff 
     bne :+
-    lda #0
+      lda #0
 
     :
     clc
@@ -317,6 +325,7 @@ render_score_text:
   sta PPUDATA
 
   ; then fall through to rendering the score itself.
+  rts
 
 render_score:
   lda PPUSTATUS             ; read PPU status to reset the high/low latch

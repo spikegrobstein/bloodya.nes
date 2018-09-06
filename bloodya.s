@@ -11,6 +11,10 @@ DRIP_END      = 180 ; the Y of the end of the fall
 DRIP_COUNT    = 8   ; number of drips we have
 SCORE_SIZE    = 10  ; number of bytes used for the score
 
+; game states
+ON_SPLASH = 0
+ON_MAIN = 1
+
 ; convenience constants
 WIDTH_TILES = 32
 HEIGHT_TILES = 30
@@ -119,13 +123,24 @@ vblankwait:
 main_palette:
   .byte $17,$08,$26,$25 ;; main palette
   .byte $17,$08,$18,$28
-  .byte $31,$39,$3A,$0f
-  .byte $00,$00,$00,$00
+  .byte $1a,$39,$3A,$0f
+  .byte $00,$30,$00,$00 ;; splash palette
 
   .byte $36,$07,$17,$27 ; drip palette
   .byte $01,$02,$38,$3C
   .byte $01,$1C,$15,$14
   .byte $01,$02,$38,$3C
+
+splash_palette:
+  .byte $0d, $30, $16, $00
+  .byte $0d,$0d,$00,$00
+  .byte $0d,$00,$00,$00
+  .byte $0d,$00,$00,$00
+
+  .byte $0d,$0d,$0d,$0d
+  .byte $0d,$00,$00,$00
+  .byte $0d,$00,$00,$00
+  .byte $0d,$00,$00,$00
 
 drip_positions:
   .byte $55,$00,%00000000,$70
@@ -230,12 +245,20 @@ blurb_tiles_1:
 blurb_tiles_2:
   .byte chr_a, chr_n, chr_e, chr_s, solids_0, chr_d, chr_o, chr_i, chr_n, chr_g, solids_0, chr_h, chr_e, chr_r, chr_e, chr_qm
 
+splash_press_start: ; 11 bytes
+  .byte chr_p, chr_r, chr_e, chr_s, chr_s, solids_0, chr_s, chr_t, chr_a, chr_r, chr_t
+
 anus_attrs:
   .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
   .byte %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
 
+splash_attrs:
+  .byte %11111111, %11111111, %11111111, %11111111, %11111111, %11111111, %11111111, %11111111
+  .byte %11111111, %11111111, %11111111, %11111111, %11111111, %11111111, %11111111, %11111111
+
 
 .segment "ZEROPAGE"
+game_state:         .res 1  ; the state of the game.
 score:              .res 10 ; the number of times we've clenched. this is basically a byte array representing the score.
 did_clench:         .res 1  ; set this when we've clenched. this is a latch to help count clenches
 controller_1:       .res 1  ; state of controller 1 (is A pressed?)
@@ -244,6 +267,8 @@ drip_velocity:      .res 8  ; each drip's velocity
 last_drop_appeared: .res 8  ; a timer for when the last drop appeared
 nmi_lock:           .res 1  ; set to 1 to prevent nmi reentry
 nmi_latch:          .res 1  ; throttles animation speed.
+main_latch:         .res 1
+splash_offset:      .res 1
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update
@@ -276,7 +301,20 @@ nmi:
   lda #$02
   sta OAMDMA ; set the high byte of ram address
 
-  jsr render_score
+  lda game_state
+  cmp #ON_MAIN
+  beq @do_main
+
+  cmp #ON_SPLASH
+  beq @do_splash
+
+  @do_main:
+    jsr render_score
+    jsr scroll_big_anus
+    jmp @nmi_end
+
+  @do_splash:
+    nop ; do nothing.
 
 @nmi_end:
   ; jsr enable_rendering
