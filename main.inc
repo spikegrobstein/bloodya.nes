@@ -57,6 +57,10 @@ init_main:
   ; this only touches sprites
   jsr place_blood_drops
 
+  ; switch mode to game
+  lda #ON_MAIN
+  sta game_state
+
   ; finish up
   jsr enable_rendering
   dec nmi_lock ; allow NMI entry again
