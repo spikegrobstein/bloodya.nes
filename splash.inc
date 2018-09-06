@@ -26,7 +26,7 @@ splash_loop:
 
   ; if start is pressed, jump to main
   lda controller_1
-  and #%00010000
+  and #%10010000
   beq :+
     jmp init_main
 
