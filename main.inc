@@ -87,6 +87,7 @@ main_loop:
   ; if controller_1 has A pressed, then clench
   ; otherwise, don't clench
   lda controller_1
+  and #%10000000
   beq @not_clenched
 
   @is_clenched:
