@@ -238,11 +238,13 @@ read_controller:
   lda #$00
   sta $4016     ; TELL BOTH THE CONTROLLERS TO LATCH BUTTONS
 
-  lda $4016     ; player 1 - A
-  AND #%00000001
-
-  sta controller_1
-  
+  ldx #8
+  :
+    lda $4016
+    lsr a            ; bit0 -> Carry
+    rol controller_1 ; bit0 <- Carry
+    dex
+    bne :-
   rts
 
 ;
