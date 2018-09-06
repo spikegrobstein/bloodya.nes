@@ -48,6 +48,7 @@ init_main:
   ; blank the background and draw the 2 main screens
   ; this touches the PPU background tiles
   jsr clear_bg
+  jsr clear_attr
   jsr render_score_text
   jsr draw_big_anus
   jsr draw_sm_anus
@@ -207,7 +208,7 @@ blank_fill:
 
   rts
 
-load_attr:
+clear_attr:
   lda PPUSTATUS             ; read PPU status to reset the high/low latch
   lda #$23
   sta PPUADDR             ; write the high byte of $23C0 address
@@ -215,20 +216,26 @@ load_attr:
   sta PPUADDR             ; write the low byte of $23C0 address
 
   ldx #$00
+  lda #$00
   :
-    lda #$00
     sta PPUDATA
     inx
-    cpx #20
+    cpx #64
     bne :-
 
-  ldx #$00              ; start out at 0
-  load_attr_loop:
-    lda anus_attrs ,x
+  lda PPUSTATUS             ; read PPU status to reset the high/low latch
+  lda #$27
+  sta PPUADDR             ; write the high byte of $23C0 address
+  lda #$C0
+  sta PPUADDR             ; write the low byte of $23C0 address
+
+  ldx #$00
+  lda #$00
+  :
     sta PPUDATA
     inx
-    cpx #10
-    bne load_attr_loop
+    cpx #64
+    bne :-
 
   rts ; return from draw_anus subroutine
 
