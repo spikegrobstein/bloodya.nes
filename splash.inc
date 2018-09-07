@@ -31,18 +31,14 @@ splash_loop:
     lda splash_offset
     cmp #0 ; if we finished scrolling and user pressed
     bne :+
+      jsr wait_for_controller_release
       jmp init_main ; then let's start the game!
 
     :
     lda #0
     sta splash_offset
 
-    ; loop until controller is released
-    @wait_for_release:
-      jsr read_controller
-      lda controller_1
-      cmp #0
-      bne @wait_for_release
+    jsr wait_for_controller_release
 
   @continue_scroll:
 

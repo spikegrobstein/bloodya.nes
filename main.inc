@@ -259,6 +259,13 @@ read_controller:
     bne :-
   rts
 
+; loop until controller is released
+wait_for_controller_release:
+  jsr read_controller
+  lda controller_1
+  cmp #0
+  bne wait_for_controller_release
+
 ;
 ; set the score to 0 and fill out the rest of the
 ; score with $ff values (blank tiles)
