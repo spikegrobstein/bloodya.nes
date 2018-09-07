@@ -174,6 +174,21 @@ render_splash_title:
     cpx #8
     bne :-
 
+  ; set up the palette attributes
+  lda PPUSTATUS
+  lda #$23
+  sta PPUADDR
+  lda #$C8
+  sta PPUADDR
+
+  ldx #0
+  :
+    lda #%10101010
+    sta PPUDATA
+    inx
+    cpx #24
+    bne :-
+
   rts
 
 render_splash_press_start:
