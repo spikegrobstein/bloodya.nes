@@ -91,31 +91,24 @@ render_splash_title:
   lda PPUSTATUS
   lda #$20
   sta PPUADDR
-  lda #$ab
+  lda #$80
   sta PPUADDR
 
-  lda #chr_b
-  sta PPUDATA
-  lda #chr_l
-  sta PPUDATA
-  lda #chr_o
-  sta PPUDATA
-  lda #chr_o
-  sta PPUDATA
-  lda #chr_d
-  sta PPUDATA
-  lda #chr_y
-  sta PPUDATA
-  lda #solids_0
-  sta PPUDATA
-  lda #chr_a
-  sta PPUDATA
-  lda #chr_n
-  sta PPUDATA
-  lda #chr_e
-  sta PPUDATA
-  lda #chr_s
-  sta PPUDATA
+  ldx #0
+  :
+    lda splash_title_top, x
+    sta PPUDATA
+    inx
+    cpx #160
+    bne :-
+
+  ldx #0
+  :
+    lda splash_title_bottom, x
+    sta PPUDATA
+    inx
+    cpx #160
+    bne :-
 
   ; draw tracking tile row
   lda PPUSTATUS
