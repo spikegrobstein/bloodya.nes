@@ -19,6 +19,9 @@ ON_MAIN = 1
 WIDTH_TILES = 32
 HEIGHT_TILES = 30
 
+; title screen values
+FLASH_START_CADENCE = 50 ; frames?
+
 ; PPU addresses
 PPUCTRL   = $2000
 PPUMASK   = $2001
@@ -305,6 +308,8 @@ nmi_lock:           .res 1  ; set to 1 to prevent nmi reentry
 nmi_latch:          .res 1  ; throttles animation speed.
 main_latch:         .res 1
 splash_offset:      .res 1
+flash_counter:      .res 1  ; for flashing ;press start' on the title screen
+flash_state:        .res 1  ; for the current state of the flash (0 off, 1 on)
 
 .segment "BSS"
 ; nmt_update: .res 256 ; nametable update entry buffer for PPU update

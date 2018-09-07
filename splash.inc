@@ -12,7 +12,6 @@ init_splash:
 
   jsr render_splash_title
   jsr render_splash_press_start
-  ; jsr load_splash_attr
 
   jsr place_splash_tracking_sprite
 
@@ -24,6 +23,7 @@ init_splash:
 splash_loop:
   jsr read_controller
 
+  ; TODO: make this a subroutine
   ; if start is pressed, jump to main
   lda controller_1
   and #%10010000
@@ -46,18 +46,24 @@ splash_loop:
 
   @continue_scroll:
 
+  ; wait for latch to fire (loop until latch != 0)
   lda nmi_latch
   cmp #0
   beq splash_loop
 
+  ; if we're done scrolling, go to the end
   lda splash_offset ; read how far we are scrolling the title screen
   cmp #0            ; if we finished (it's at zero)
-  beq @splash_loop_end ; then we're done.
+  beq @skip_animate_title ; then we're done.
 
-
+  ; if we're still scrolling,
+  ; decrement the splash offset by 2
   dec splash_offset
   dec splash_offset
 
+  @skip_animate_title:
+
+  ; scroll the splash offset
   lda PPUSTATUS
   lda splash_offset
   sta PPUSCROLL
@@ -72,17 +78,77 @@ splash_loop:
     bit PPUSTATUS
     bvc @sprite_0_wait
 
-  lda PPUSTATUS
-  lda #0
-  sta PPUSCROLL
-  sta PPUSCROLL
+  lda splash_offset
+  cmp #0
+  bne @hide_press_start
 
-  @splash_loop_end:
+  lda flash_state
+  cmp #1
+  bne @hide_press_start
+
+  @show_press_start:
+    ; scroll to zero once we hit the scroll tracker
+    lda PPUSTATUS
     lda #0
-    sta nmi_latch
+    sta PPUSCROLL
+    sta PPUSCROLL
+
+    jmp @splash_loop_end
+
+  @hide_press_start:
+    lda PPUSTATUS
+    lda #$ff
+    sta PPUSCROLL
+    lda #0
+    sta PPUSCROLL
+
+
+  ; finish everything up
+  @splash_loop_end:
+
+  jsr flash_press_start
+
+  ; reset the latch to zero
+  lda #0
+  sta nmi_latch
 
   jmp splash_loop
-  ; end
+
+  ; end and loop
+
+;
+; count the flash counter to zero
+; if it hits zero, flip the state and reset counter
+flash_press_start:
+  lda flash_counter
+  cmp #0
+  beq @handle_zero
+
+    ; counter isn't zero, so decrement
+    dec flash_counter
+    rts ; and we're done
+
+  @handle_zero:
+    ; we are at zero, so first, reset the counter
+    lda #FLASH_START_CADENCE
+    sta flash_counter
+
+    ; now, update the state
+    lda flash_state
+    cmp #0 ; it is off
+    beq @turn_on
+      ; turn it off
+      lda #0
+      jmp @update_state
+
+    @turn_on:
+      lda #1 ; turn it on
+
+    @update_state:
+
+    sta flash_state
+
+  rts
 
 load_splash_palette:
   lda PPUSTATUS
