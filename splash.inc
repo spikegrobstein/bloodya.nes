@@ -273,7 +273,7 @@ render_splash_press_start:
   lda PPUSTATUS
   lda #$22
   sta PPUADDR
-  lda #$4b
+  lda #$ab
   sta PPUADDR
 
   ldx #0
