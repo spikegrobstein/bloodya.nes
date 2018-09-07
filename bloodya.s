@@ -134,7 +134,7 @@ main_palette:
 splash_palette:
   .byte $0d, $30, $16, $00 ; default
   .byte $0d,$0d,$00,$00 ; scrolling track
-  .byte $0d,$16,$30,$00 ; splash title
+  .byte $0d,$16,$30,$07 ; splash title
   .byte $0d,$00,$00,$00
 
   .byte $0d,$0d,$0d,$0d
