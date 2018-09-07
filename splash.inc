@@ -27,20 +27,36 @@ splash_loop:
   ; if start is pressed, jump to main
   lda controller_1
   and #%10010000
-  beq :+
-    jmp init_main
+  beq @continue_scroll
+    lda splash_offset
+    cmp #0 ; if we finished scrolling and user pressed
+    bne :+
+      jmp init_main ; then let's start the game!
 
-  :
+    :
+    lda #0
+    sta splash_offset
+
+    ; loop until controller is released
+    @wait_for_release:
+      jsr read_controller
+      lda controller_1
+      cmp #0
+      bne @wait_for_release
+
+  @continue_scroll:
 
   lda nmi_latch
   cmp #0
   beq splash_loop
 
-  lda splash_offset
-  cmp #0
-  beq @splash_loop_end
-    dec splash_offset
-    dec splash_offset
+  lda splash_offset ; read how far we are scrolling the title screen
+  cmp #0            ; if we finished (it's at zero)
+  beq @splash_loop_end ; then we're done.
+
+
+  dec splash_offset
+  dec splash_offset
 
   lda PPUSTATUS
   lda splash_offset
@@ -62,8 +78,8 @@ splash_loop:
   sta PPUSCROLL
 
   @splash_loop_end:
-  lda #0
-  sta nmi_latch
+    lda #0
+    sta nmi_latch
 
   jmp splash_loop
   ; end
