@@ -4,8 +4,8 @@ bloodya.nes: bloodya.o bloodya.cfg src/chr1.chr
 bloodya.o: src/bloodya.s src/main.inc src/anus.inc src/drip.inc src/splash.inc src/chr1.chr
 	ca65 src/bloodya.s -g -o bloodya.o
 
-src/chr1.chr: chr1.png
-	png2chr --outdir src chr1.png
+src/chr1.chr: img/chr1.png
+	png2chr --outdir src img/chr1.png
 
 run: bloodya.nes
 	fceux $^
