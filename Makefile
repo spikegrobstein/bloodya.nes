@@ -1,11 +1,11 @@
-bloodya.nes: bloodya.o bloodya.cfg chr1.chr
+bloodya.nes: bloodya.o bloodya.cfg src/chr1.chr
 	ld65 -o $@ -C bloodya.cfg bloodya.o -m bloodya.map.txt -Ln bloodya.labels.txt --dbgfile bloodya.nes.dbg
 
-bloodya.o: bloodya.chr bloodya.s main.inc anus.inc drip.inc splash.inc
-	ca65 bloodya.s -g -o bloodya.o
+bloodya.o: src/bloodya.s src/main.inc src/anus.inc src/drip.inc src/splash.inc src/chr1.chr
+	ca65 src/bloodya.s -g -o bloodya.o
 
-chr1.chr: chr1.png
-	png2chr chr1.png
+src/chr1.chr: chr1.png
+	png2chr --outdir src chr1.png
 
 run: bloodya.nes
 	fceux $^
@@ -19,6 +19,7 @@ clean:
 		bloodya.nes.ram.nl \
 		bloodya.nes.0.nl \
 		bloodya.nes.1.nl \
-		bloodya.nes.dbg
+		bloodya.nes.dbg \
+		src/chr1.chr
 
 .PHONY:
