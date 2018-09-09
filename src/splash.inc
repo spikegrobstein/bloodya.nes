@@ -23,24 +23,7 @@ init_splash:
 splash_loop:
   jsr read_controller
 
-  ; TODO: make this a subroutine
-  ; if start is pressed, jump to main
-  lda controller_1
-  and #%10010000
-  beq @continue_scroll
-    lda splash_offset
-    cmp #0 ; if we finished scrolling and user pressed
-    bne :+
-      jsr wait_for_controller_release
-      jmp init_main ; then let's start the game!
-
-    :
-    lda #0
-    sta splash_offset
-
-    jsr wait_for_controller_release
-
-  @continue_scroll:
+  jsr splash_handle_controller
 
   ; wait for latch to fire (loop until latch != 0)
   lda nmi_latch
@@ -111,6 +94,27 @@ splash_loop:
   jmp splash_loop
 
   ; end and loop
+
+splash_handle_controller:
+  ; TODO: make this a subroutine
+  ; if start is pressed, jump to main
+  lda controller_1
+  and #%10010000
+  beq @end
+    lda splash_offset
+    cmp #0 ; if we finished scrolling and user pressed
+    bne :+
+      jsr wait_for_controller_release
+      jmp init_main ; then let's start the game!
+
+    :
+    lda #0
+    sta splash_offset
+
+    jsr wait_for_controller_release
+
+  @end:
+    rts
 
 ;
 ; count the flash counter to zero
