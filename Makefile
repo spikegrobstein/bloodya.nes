@@ -1,7 +1,18 @@
+sourcefiles= \
+	src/bloodya.s \
+	src/beep.inc \
+	src/main.inc \
+	src/controller.inc \
+	src/anus.inc \
+	src/drip.inc \
+	src/ascii.inc \
+	src/splash.inc \
+	src/vars.inc
+
 bloodya.nes: bloodya.o bloodya.cfg src/chr1.chr
 	ld65 -o $@ -C bloodya.cfg bloodya.o -m bloodya.map.txt -Ln bloodya.labels.txt --dbgfile bloodya.nes.dbg
 
-bloodya.o: src/bloodya.s src/main.inc src/anus.inc src/drip.inc src/splash.inc src/chr1.chr
+bloodya.o: $(sourcefiles) src/chr1.chr
 	ca65 src/bloodya.s -g -o bloodya.o
 
 src/chr1.chr: img/chr1.png
