@@ -67,6 +67,36 @@ INES_SRAM   = 0 ; 1 = battery backed SRAM at $6000-7FFF
 .word reset
 .word irq
 
+.segment "ZEROPAGE"
+game_state:         .res 1  ; the state of the game.
+score_counter:      .res 1  ; this is where we count up between score increments
+score:              .res 10 ; the number of times we've clenched. this is basically a byte array representing the score.
+did_clench:         .res 1  ; set this when we've clenched. this is a latch to help count clenches
+controller_1:       .res 1  ; state of controller 1 (is A pressed?)
+temp:               .res 1  ; temporary variable
+drip_velocity:      .res 8  ; each drip's velocity
+last_drop_appeared: .res 8  ; a timer for when the last drop appeared
+nmi_lock:           .res 1  ; set to 1 to prevent nmi reentry
+nmi_latch:          .res 1  ; throttles animation speed.
+main_latch:         .res 1
+splash_offset:      .res 1
+flash_counter:      .res 1  ; for flashing ;press start' on the title screen
+flash_state:        .res 1  ; for the current state of the flash (0 off, 1 on)
+
+.segment "BSS"
+; nmt_update: .res 256 ; nametable update entry buffer for PPU update
+; palette:    .res 32  ; palette buffer for PPU update
+
+.segment "OAM"
+oam: .res 256        ; sprite OAM data to be uploaded by DMA
+
+.segment "RODATA"
+
+.include "data/palette.inc"
+.include "data/drip.inc"
+.include "data/splash.inc"
+.include "data/anus.inc"
+
 ;
 ; reset routine
 ;
@@ -123,37 +153,6 @@ vblankwait:
 
 .include "main.inc"
 
-.segment "RODATA"
-
-.include "data/palette.inc"
-.include "data/drip.inc"
-.include "data/splash.inc"
-.include "data/anus.inc"
-
-.segment "ZEROPAGE"
-game_state:         .res 1  ; the state of the game.
-score_counter:      .res 1  ; this is where we count up between score increments
-score:              .res 10 ; the number of times we've clenched. this is basically a byte array representing the score.
-did_clench:         .res 1  ; set this when we've clenched. this is a latch to help count clenches
-controller_1:       .res 1  ; state of controller 1 (is A pressed?)
-temp:               .res 1  ; temporary variable
-drip_velocity:      .res 8  ; each drip's velocity
-last_drop_appeared: .res 8  ; a timer for when the last drop appeared
-nmi_lock:           .res 1  ; set to 1 to prevent nmi reentry
-nmi_latch:          .res 1  ; throttles animation speed.
-main_latch:         .res 1
-splash_offset:      .res 1
-flash_counter:      .res 1  ; for flashing ;press start' on the title screen
-flash_state:        .res 1  ; for the current state of the flash (0 off, 1 on)
-
-.segment "BSS"
-; nmt_update: .res 256 ; nametable update entry buffer for PPU update
-; palette:    .res 32  ; palette buffer for PPU update
-
-.segment "OAM"
-oam: .res 256        ; sprite OAM data to be uploaded by DMA
-
-.segment "CODE"
 irq:
   rti
 
