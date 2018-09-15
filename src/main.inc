@@ -6,9 +6,9 @@
 .include "controller.inc"
 
 init:
-  jsr init_splash
+  jsr start_splash
 
-init_main:
+start_main:
   inc nmi_lock ; prevent NMI entry, which will update PPU
   jsr disable_rendering
 

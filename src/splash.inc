@@ -1,4 +1,4 @@
-init_splash:
+start_splash:
   inc nmi_lock
   jsr disable_rendering
 
@@ -105,7 +105,7 @@ splash_handle_controller:
     cmp #0 ; if we finished scrolling and user pressed
     bne :+
       jsr wait_for_controller_release
-      jmp init_main ; then let's start the game!
+      jmp start_main ; then let's start the game!
 
     :
     lda #0
