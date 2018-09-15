@@ -68,85 +68,88 @@ animate_frame:
 
   ldx #0
   ldy #0
-@drip_loop:
-  lda last_drop_appeared, x
-  cmp #$00 ; check if it's zero. if so, it's gonna be animated
-  beq @animate_drop
+  @drip_loop:
+    lda last_drop_appeared, x
+    cmp #$00 ; check if it's zero. if so, it's gonna be animated
+    beq @animate_drop
 
-  ; we only want to respawn drops if we're not clenched
-  lda controller_1
-  bne @next_drop
+      ; we only want to respawn drops if we're not clenched
+      lda controller_1
+      bne @next_drop
 
-  dec last_drop_appeared, x ; decrement the value
+        dec last_drop_appeared, x ; decrement the value
 
-  lda last_drop_appeared, x ; load it so we can check it
-  cmp #$00 ; check if it's zero
-  bne @next_drop
+        lda last_drop_appeared, x ; load it so we can check it
+        cmp #$00 ; check if it's zero
+        bne @next_drop
 
-  ; the thing hit zero, so we need to initialize it before we start animating
-  lda drip_positions, y
-  sta $0200+4, y
-  lda #0
-  sta $0201+4, y
+          ; the thing hit zero, so we need to initialize it before we start animating
+          lda drip_positions, y
+          sta $0200+4, y
+          lda #0
+          sta $0201+4, y
 
-@animate_drop:
-  lda $0200+4, y       ; first move the drop down 'velocity' pixels
-  clc
-  adc drip_velocity, x
-  sta $0200+4, y
+          jsr decrement_score ; a drop is dripping, decrement the score
 
-  lda drip_velocity, x
-  cmp #MAX_VELOCITY ; if it's at max velocity stop incrementing
-  beq :+ ; skip incrementing
-    inc drip_velocity, x ;increase drip velocity
+  @animate_drop:
+    lda $0200+4, y       ; first move the drop down 'velocity' pixels
+    clc
+    adc drip_velocity, x
+    sta $0200+4, y
 
-  :
-  ; if drip is at the end of it's fall
-  lda $0200+4, y ; read in the y coordinate
-  clc
-  sbc #DRIP_END ; check if it's off screen
-  bcc @update_drop_colors; carry flag not set, so it's not off-screen
+    lda drip_velocity, x
+    cmp #MAX_VELOCITY ; if it's at max velocity stop incrementing
+    beq :+ ; skip incrementing
+      inc drip_velocity, x ;increase drip velocity
 
-  ; it is at the end
-  lda #$01 
-  sta drip_velocity, x  ; reset the drip velocity to 1
-  lda #$20
-  sta last_drop_appeared, x ; reset the drip timer
-  lda #OFFSCREEN
-  sta $0200+4, y   ; move the drip off-screen
+    :
+    ; if drip is at the end of it's fall
+    lda $0200+4, y ; read in the y coordinate
+    clc
+    sbc #DRIP_END ; check if it's off screen
+    bcc @update_drop_colors; carry flag not set, so it's not off-screen
 
-@update_drop_colors:
-  ; update the drop colors basd on their y coordinate
-  ; this is to simulate the fading as they fall
-  lda $0200+4, y ; get the y coordinate of the drop
-  clc
-  sbc #DRIP_CHANGE_1     ; check if we're past this point.
-  bcc :+       ; if so, use the next color drop 
+      ; it is at the end
+      lda #$01 
+      sta drip_velocity, x  ; reset the drip velocity to 1
+      lda #$20
+      sta last_drop_appeared, x ; reset the drip timer
+      lda #OFFSCREEN
+      sta $0200+4, y   ; move the drip off-screen
 
-  lda #1 ; load the sprite index for this drop
-  sta $0201+4, y ; store it back
+  @update_drop_colors:
+    ; update the drop colors basd on their y coordinate
+    ; this is to simulate the fading as they fall
+    lda $0200+4, y ; get the y coordinate of the drop
+    clc
+    sbc #DRIP_CHANGE_1     ; check if we're past this point.
+    bcc :+       ; if so, use the next color drop 
 
-:
-  lda $0200+4, y ; get the y coordinate of the drop
-  clc
-  sbc #DRIP_CHANGE_2     ; check if we're past this point
-  bcc :+       ; if so, update teh color of the drop again
+      lda #1 ; load the sprite index for this drop
+      sta $0201+4, y ; store it back
 
-  lda #2
-  sta $0201+4, y
+    :
+    lda $0200+4, y ; get the y coordinate of the drop
+    clc
+    sbc #DRIP_CHANGE_2     ; check if we're past this point
+    bcc :+       ; if so, update teh color of the drop again
 
-:
-@next_drop:
-  inx
-  iny
-  iny
-  iny
-  iny
+      lda #2
+      sta $0201+4, y
 
-  cpx #DRIP_COUNT ; check if we're at the 8th sprite
-  beq @end_animate_frame  ; end our thing if so.
+    :
+  @next_drop:
+    inx
+    iny
+    iny
+    iny
+    iny
 
-  jmp @drip_loop
+    cpx #DRIP_COUNT ; check if we're at the 8th sprite
+    beq @end_animate_frame  ; end our thing if so.
 
-@end_animate_frame:
-  rts
+      jmp @drip_loop
+
+  @end_animate_frame:
+    rts
+

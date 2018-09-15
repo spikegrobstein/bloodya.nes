@@ -10,6 +10,7 @@ DRIP_CHANGE_2 = 150 ; second breakpoint for color change
 DRIP_END      = 180 ; the Y of the end of the fall
 DRIP_COUNT    = 8   ; number of drips we have
 SCORE_SIZE    = 10  ; number of bytes used for the score
+SCORE_INC_TIMER = 20 ; how many frames between score increments
 
 ; game states
 ON_SPLASH = 0
@@ -299,6 +300,7 @@ splash_attrs:
 
 .segment "ZEROPAGE"
 game_state:         .res 1  ; the state of the game.
+score_counter:      .res 1  ; this is where we count up between score increments
 score:              .res 10 ; the number of times we've clenched. this is basically a byte array representing the score.
 did_clench:         .res 1  ; set this when we've clenched. this is a latch to help count clenches
 controller_1:       .res 1  ; state of controller 1 (is A pressed?)

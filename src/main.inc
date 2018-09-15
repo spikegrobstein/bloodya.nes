@@ -69,13 +69,13 @@ main_loop:
 
   @is_clenched:
     jsr scroll_sm_anus
+    jsr increment_counter
     lda did_clench ; short-circuit if we're clenched
     bne :+
 
     lda #1 ; mark clenched
     sta did_clench
     
-    jsr increment_score
 
     jmp :+
 
@@ -215,6 +215,20 @@ clear_attr:
 
   rts ; return from draw_anus subroutine
 
+increment_counter:
+  inc score_counter
+  
+  ; now check if it's greater than the SCORE_INC_TIMER
+  lda score_counter
+  clc ; clear the carry
+  sbc #SCORE_INC_TIMER ; check if it's equal to the thing
+  bcc @end ; carry flag not set, so it's not quite there, yet
+    lda #0
+    sta score_counter ; reset the score counter
+    jsr increment_score ; increment the score
+
+  @end:
+  rts
 
 ;
 ; set the score to 0 and fill out the rest of the
@@ -273,6 +287,119 @@ increment_score:
   
   @end:
   
+  rts
+
+;
+; subtracts one fromt he score. this is done for every drop of blood that escapes
+; the anus. it happens when the blood appears, not when it hits the ground.
+; this is accomplished by subtracting the least significant digit and carrying if necessary
+; the inverse of increment_score
+;
+decrement_score:
+  ; save registers
+	pha
+	txa
+	pha
+	tya
+	pha
+
+  ldx #0
+  @loop:
+    cpx #SCORE_SIZE
+    beq @end ; stop when we get to the end
+
+    lda score, x
+    
+    ; skip if we're on a placeholder ($ff)
+    cmp #$ff
+    beq @end ; we done!
+
+    cmp #0
+    beq @deal_with_carry
+
+    ; if we're not at zero,
+    ; decrement, store it and finish
+    ; BUT, if we hit zero on this one, we want to convert to a placeholder
+    ; ONLY if the next digit is a placeholder
+    ; so look ahead, check if placeholder and act accordingly
+
+    ; check to see if we're at '1', if not (we're greater than one)
+    ; we can just decrement the value and be done.
+    cmp #1
+    bne @decrement_and_finish
+
+    ; we are at 1, so lookahead
+    jsr score_lookahead
+
+    ; check to see if next digit is a placeholder
+    ; if so, check if current digit is last digit
+
+    cmp #$ff ; is it a placeholder
+    bne @decrement_and_finish  ; it's not, so we don't do anything special
+
+    ; (current digit is 1, next item is placeholder)
+    ; check if we're last digit, and if so, don't do anything special.
+    cpx #0
+    beq @decrement_and_finish ; we are last digit, so nothing special
+
+    ; (current digit is 1, next item is a placeholder)
+    ; so just set current digit to placeholder rather than going to zero
+    lda #$ff
+    sta score, x
+    jmp @end
+
+  @decrement_and_finish:
+    dec score, x ; decrement
+    jmp @end     ; we done!
+
+  @deal_with_carry:
+    ; we are at zero and will go below
+    ; so we need to try to carry
+
+    ; if we're on the last digit and the next one is a $ff,
+    ; then we should stay at zero and do nothing more
+    cpx #0 ; check if we're on the first digit
+    bne @dec_and_carry; we are not at last digit, so no special handling, decrement and carry
+
+      ; we are on the last digit so look ahead and see if it's a $ff
+      jsr score_lookahead
+
+      cmp #$ff ; check if it's a placeholder
+      beq @end ; if it is, let's just finish
+               ; this means we're at a total score of '0'
+
+      ; otherwise, we'll continue (decrement and move on)
+  
+  @dec_and_carry:
+    ; if we get here, it means we're gonna deal with carrying.
+    ; the current digit is 0, so we need to go down to 9 and then go to next digit
+    ; set it to 9 and go to next number
+    lda #9
+    sta score, x
+
+    inx ; next iteration
+    jmp @loop
+
+  @end:
+
+    ; restore registers and stuff
+    pla
+    tay
+    pla
+    tax
+    pla
+
+  rts
+
+;
+; this will read the *next* byte in the score into register A
+; it does this by incrementing X, reading score + x, then resetting X
+;
+score_lookahead:
+  inx
+  lda score, x ; read the score byte
+  dex ; reset the x counter to where it was before lookahead
+
   rts
 
 render_score_text:
