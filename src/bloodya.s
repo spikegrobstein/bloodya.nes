@@ -11,6 +11,7 @@ DRIP_END      = 180 ; the Y of the end of the fall
 DRIP_COUNT    = 8   ; number of drips we have
 SCORE_SIZE    = 10  ; number of bytes used for the score
 SCORE_INC_TIMER = 20 ; how many frames between score increments
+SCORE_PLACEHOLDER = $ff
 
 ; game states
 ON_SPLASH = 0

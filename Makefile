@@ -12,6 +12,7 @@ sourcefiles= \
 	$(srcdir)/drip.inc \
 	$(srcdir)/ascii.inc \
 	$(srcdir)/splash.inc \
+	$(srcdir)/score.inc \
 	$(srcdir)/data/palette.inc \
 	$(srcdir)/data/anus.inc \
 	$(srcdir)/data/drip.inc \
