@@ -7,3 +7,4 @@
 *.labels.txt
 src/*.chr
 img/background.png
+src/vars.inc
