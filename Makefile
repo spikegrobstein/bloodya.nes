@@ -5,7 +5,6 @@ varfile=$(srcdir)/vars.inc
 
 sourcefiles= \
 	$(srcdir)/bloodya.s \
-	$(srcdir)/beep.inc \
 	$(srcdir)/main.inc \
 	$(srcdir)/controller.inc \
 	$(srcdir)/anus.inc \
