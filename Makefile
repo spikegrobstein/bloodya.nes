@@ -7,7 +7,11 @@ sourcefiles= \
 	src/drip.inc \
 	src/ascii.inc \
 	src/splash.inc \
-	src/vars.inc
+	src/vars.inc \
+	src/data/palette.inc \
+	src/data/anus.inc \
+	src/data/drip.inc \
+	src/data/splash.inc
 
 bloodya.nes: bloodya.o bloodya.cfg
 	ld65 -o $@ -C bloodya.cfg bloodya.o -m bloodya.map.txt -Ln bloodya.labels.txt --dbgfile bloodya.nes.dbg
