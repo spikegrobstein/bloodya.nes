@@ -4,3 +4,5 @@
 *.nl
 *.dbg
 *.chr
+src/*.chr
+img/background.png

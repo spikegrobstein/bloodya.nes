@@ -55,7 +55,8 @@ INES_SRAM   = 0 ; 1 = battery backed SRAM at $6000-7FFF
 ;
 
 .segment "TILES"
-.incbin "chr1.chr"
+.incbin "sprites.chr"
+.incbin "background.chr"
 
 ; vectors placed at top 6 bytes of memory area
 ;

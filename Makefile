@@ -9,14 +9,20 @@ sourcefiles= \
 	src/splash.inc \
 	src/vars.inc
 
-bloodya.nes: bloodya.o bloodya.cfg src/chr1.chr
+bloodya.nes: bloodya.o bloodya.cfg
 	ld65 -o $@ -C bloodya.cfg bloodya.o -m bloodya.map.txt -Ln bloodya.labels.txt --dbgfile bloodya.nes.dbg
 
-bloodya.o: $(sourcefiles) src/chr1.chr
+bloodya.o: $(sourcefiles) src/sprites.chr src/background.chr
 	ca65 src/bloodya.s -g -o bloodya.o
 
-src/chr1.chr: img/chr1.png
-	png2chr --outdir src img/chr1.png
+img/background.png: img/char.png img/solids.png img/big_anus.png img/sm_anus.png img/splash.png
+	tilec --varfile src/vars.inc --outfile $@ $^
+
+src/sprites.chr: img/sprites.png
+	png2chr --size 256 --outdir src $^
+
+src/background.chr: img/background.png
+	png2chr --size 256 --outdir src $^
 
 run: bloodya.nes
 	fceux $^
@@ -31,6 +37,8 @@ clean:
 		bloodya.nes.0.nl \
 		bloodya.nes.1.nl \
 		bloodya.nes.dbg \
-		src/chr1.chr
+		src/background.chr \
+		src/sprites.chr \
+		img/background.png
 
 .PHONY:
