@@ -3,6 +3,7 @@
 .include "anus.inc"
 .include "drip.inc"
 .include "splash.inc"
+.include "score.inc"
 .include "controller.inc"
 
 init:
