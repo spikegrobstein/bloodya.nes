@@ -36,6 +36,8 @@ bloodya.nes: bloodya.o bloodya.cfg
 bloodya.o: $(sourcefiles) $(chrfiles)
 	ca65 $(srcdir)/bloodya.s -g -o bloodya.o
 
+$(varfile): $(imgdir)/background.png
+
 $(imgdir)/background.png: $(background_images)
 	tilec --varfile $(varfile) --outfile $@ $^
 
