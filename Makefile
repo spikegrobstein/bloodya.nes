@@ -61,6 +61,7 @@ clean:
 		bloodya.nes.1.nl \
 		bloodya.nes.dbg \
 		$(chrfiles) \
-		$(imgdir)/background.png
+		$(imgdir)/background.png \
+		$(varfile)
 
 .PHONY:
