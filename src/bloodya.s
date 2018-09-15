@@ -110,8 +110,8 @@ reset:
   ldx #$FF
   txs       ;set up stack
   inx       ;now X = 0 (255 + 1). we're gonna write $00 to several memory addresses
-  stx $2000 ; disable NMI
-  stx $2001 ; disable rendering
+  stx PPUCTRL ; disable NMI
+  stx PPUMASK ; disable rendering
   stx $4010 ; disable DMC IRQs
 
   jsr vblankwait
@@ -147,7 +147,7 @@ reset:
   jmp init
 
 vblankwait:
-  bit $2002
+  bit PPUSTATUS
   bpl vblankwait
   rts
 
