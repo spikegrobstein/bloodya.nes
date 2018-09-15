@@ -4,5 +4,6 @@
 *.nl
 *.dbg
 *.chr
+*.labels.txt
 src/*.chr
 img/background.png
