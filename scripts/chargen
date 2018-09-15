@@ -1,0 +1,31 @@
+#! /usr/bin/env bash
+
+# generate character strings using the variables from our ascii.inc variables
+
+str="$1"
+
+converted=()
+
+for (( i=0; i < ${#str}; i++ )); do
+  #echo "Processing: $i - ${str:i:1}" >&2
+
+  c="${str:i:1}"
+
+  if [[ "$c" = '?' ]]; then
+    converted+=("chr_qm")
+  elif [[ "$c" = ' ' ]]; then
+    converted+=("solids_0")
+  elif [[ "$c" =~ ^[a-zA-Z0-9]$ ]]; then
+    converted+=(
+      "$( printf "chr_%s" "$( tr 'A-Z' 'a-z' <<< "$c" )" )"
+    )
+  else
+    echo "Unsupported character: $c" >&2
+    exit 1
+  fi
+done
+
+printf ".byte "
+printf "%s, " "${converted[@]}" \
+  | sed 's@, $@@'
+
