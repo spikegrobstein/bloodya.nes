@@ -1,32 +1,49 @@
+srcdir=src
+imgdir=img
+
+varfile=$(srcdir)/vars.inc
+
 sourcefiles= \
-	src/bloodya.s \
-	src/beep.inc \
-	src/main.inc \
-	src/controller.inc \
-	src/anus.inc \
-	src/drip.inc \
-	src/ascii.inc \
-	src/splash.inc \
-	src/vars.inc \
-	src/data/palette.inc \
-	src/data/anus.inc \
-	src/data/drip.inc \
-	src/data/splash.inc
+	$(srcdir)/bloodya.s \
+	$(srcdir)/beep.inc \
+	$(srcdir)/main.inc \
+	$(srcdir)/controller.inc \
+	$(srcdir)/anus.inc \
+	$(srcdir)/drip.inc \
+	$(srcdir)/ascii.inc \
+	$(srcdir)/splash.inc \
+	$(srcdir)/data/palette.inc \
+	$(srcdir)/data/anus.inc \
+	$(srcdir)/data/drip.inc \
+	$(srcdir)/data/splash.inc \
+	$(varfile)
+
+background_images= \
+	$(imgdir)/char.png \
+	$(imgdir)/solids.png \
+	$(imgdir)/big_anus.png \
+	$(imgdir)/sm_anus.png \
+	$(imgdir)/splash.png
+
+chrfiles= \
+	$(srcdir)/sprites.chr \
+	$(srcdir)/background.chr
+
 
 bloodya.nes: bloodya.o bloodya.cfg
 	ld65 -o $@ -C bloodya.cfg bloodya.o -m bloodya.map.txt -Ln bloodya.labels.txt --dbgfile bloodya.nes.dbg
 
-bloodya.o: $(sourcefiles) src/sprites.chr src/background.chr
-	ca65 src/bloodya.s -g -o bloodya.o
+bloodya.o: $(sourcefiles) $(chrfiles)
+	ca65 $(srcdir)/bloodya.s -g -o bloodya.o
 
-img/background.png: img/char.png img/solids.png img/big_anus.png img/sm_anus.png img/splash.png
-	tilec --varfile src/vars.inc --outfile $@ $^
+$(imgdir)/background.png: $(background_images)
+	tilec --varfile $(varfile) --outfile $@ $^
 
-src/sprites.chr: img/sprites.png
-	png2chr --size 256 --outdir src $^
+$(srcdir)/sprites.chr: $(imgdir)/sprites.png
+	png2chr --size 256 --outdir $(srcdir) $^
 
-src/background.chr: img/background.png
-	png2chr --size 256 --outdir src $^
+$(srcdir)/background.chr: $(imgdir)/background.png
+	png2chr --size 256 --outdir $(srcdir) $^
 
 run: bloodya.nes
 	fceux $^
@@ -41,8 +58,7 @@ clean:
 		bloodya.nes.0.nl \
 		bloodya.nes.1.nl \
 		bloodya.nes.dbg \
-		src/background.chr \
-		src/sprites.chr \
-		img/background.png
+		$(chrfiles) \
+		$(imgdir)/background.png
 
 .PHONY:
